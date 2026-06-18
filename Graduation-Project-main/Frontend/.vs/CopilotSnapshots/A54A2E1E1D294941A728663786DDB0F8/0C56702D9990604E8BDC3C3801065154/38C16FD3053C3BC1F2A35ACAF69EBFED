@@ -1,0 +1,187 @@
+﻿import { useEffect, useState } from 'react'
+import { useAuth } from '@/context/AuthContext'
+import { touristsApi } from '@/api/tourists'
+import { guidesApi } from '@/api/guides'
+import { Avatar, Button, Card, Input, ListSkeleton, useToast } from '@/components/ui'
+import { getErrorMessage } from '@/api/axios'
+import type { TouristProfile, GuideDetails } from '@/types'
+import { Link } from 'react-router-dom'
+import { Camera, User } from 'lucide-react'
+
+export function ProfilePage() {
+  const { user, hasRole } = useAuth()
+  const [profile, setProfile] = useState<TouristProfile | GuideDetails | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const { showToast } = useToast()
+
+  // Form state for Tourist
+  const [touristForm, setTouristForm] = useState({
+    userName: '',
+    country: '',
+    language: '',
+    age: 0
+  })
+
+  // Form state for Guide
+  const [guideForm, setGuideForm] = useState({
+    bio: '',
+    language: '',
+    priceOfDay: 0
+  })
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      setIsLoading(true)
+      try {
+        if (hasRole('Tourist')) {
+          const data = await touristsApi.getMyProfile()
+          setProfile(data)
+          setTouristForm({
+            userName: data.userName || '',
+            country: data.country || '',
+            language: data.language || '',
+            age: data.age || 0
+          })
+        } else if (hasRole('Guide')) {
+          const data = await guidesApi.getMyProfile()
+          setProfile(data)
+          setGuideForm({
+            bio: data.bio || '',
+            language: data.language || '',
+            priceOfDay: data.priceOfDay || 0
+          })
+        }
+      } catch (err) {
+        showToast(getErrorMessage(err), 'error')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadProfile()
+  }, [hasRole, showToast])
+
+  const handleTouristSave = async () => {
+    setIsSaving(true)
+    try {
+      await touristsApi.updateProfile(touristForm)
+      showToast('Profile updated successfully', 'success')
+      const updated = await touristsApi.getMyProfile()
+      setProfile(updated)
+    } catch (err) {
+      showToast(getErrorMessage(err), 'error')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  // Guide save handled in guide profile page
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    
+    setIsUploading(true)
+    try {
+      let newImageUrl: string
+      if (hasRole('Tourist')) {
+        const result = await touristsApi.updateProfileImage(file)
+        newImageUrl = result.imageUrl
+      } else {
+        const result = await guidesApi.updateProfileImage(file)
+        newImageUrl = result.imageUrl
+      }
+      
+      setProfile(prev => prev ? { ...prev, profileImageUrl: newImageUrl } : prev)
+      showToast('Profile picture updated', 'success')
+    } catch (err) {
+      showToast(getErrorMessage(err), 'error')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  if (isLoading) return <div className="container mx-auto px-4 py-8"><ListSkeleton /></div>
+
+  const profileImage = profile?.profileImageUrl || `https://ui-avatars.com/api/?name=${user?.userName || 'User'}&background=0e7490&color=fff`
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-2xl">
+      <h1 className="text-2xl font-bold mb-6">My Profile</h1>
+      
+      <Card className="p-6">
+        {/* Avatar Section */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="relative">
+            <Avatar src={profileImage} name={user?.userName || 'User'} size="xl" className="ring-4 ring-primary-100" />
+            <label className="absolute bottom-0 right-0 p-1.5 bg-primary-600 rounded-full text-white cursor-pointer hover:bg-primary-700 transition-colors">
+              <Camera className="h-4 w-4" />
+              <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={isUploading} />
+            </label>
+          </div>
+          <h2 className="font-bold text-lg mt-3">{user?.userName}</h2>
+          <p className="text-sm text-slate-500">{user?.email}</p>
+          <span className="mt-2 px-3 py-1 rounded-full bg-primary-100 text-primary-800 text-xs font-semibold">
+            {user?.role === 'Tourist' ? 'Tourist' : user?.role === 'Guide' ? 'Tour Guide' : 'Admin'}
+          </span>
+        </div>
+
+        {/* Guide Settings Link */}
+        {hasRole('Guide') && (
+          <Link to="/guide/profile" className="block mb-4">
+            <Button variant="outline" className="w-full">Guide Settings & Pricing</Button>
+          </Link>
+        )}
+
+        {/* Tourist Form */}
+        {hasRole('Tourist') && (
+          <div className="space-y-4">
+            <Input
+              label="Username"
+              value={touristForm.userName}
+              onChange={(e) => setTouristForm({ ...touristForm, userName: e.target.value })}
+            />
+            <Input
+              label="Country"
+              value={touristForm.country}
+              onChange={(e) => setTouristForm({ ...touristForm, country: e.target.value })}
+            />
+            <Input
+              label="Language"
+              value={touristForm.language}
+              onChange={(e) => setTouristForm({ ...touristForm, language: e.target.value })}
+            />
+            <Input
+              label="Age"
+              type="number"
+              value={touristForm.age}
+              onChange={(e) => setTouristForm({ ...touristForm, age: Number(e.target.value) })}
+            />
+            <Button onClick={handleTouristSave} isLoading={isSaving} className="w-full">Save Changes</Button>
+          </div>
+        )}
+      </Card>
+      
+      {/* Quick Links */}
+      <div className="mt-6 grid grid-cols-2 gap-3">
+        <Link to="/bookings">
+          <Button variant="outline" className="w-full">My Bookings</Button>
+        </Link>
+        <Link to="/plans">
+          <Button variant="outline" className="w-full">My Plans</Button>
+        </Link>
+        {hasRole('Guide') && (
+          <>
+            <Link to="/guide/wallet">
+              <Button variant="outline" className="w-full">Wallet</Button>
+            </Link>
+            <Link to="/guide/stories">
+              <Button variant="outline" className="w-full">My Stories</Button>
+            </Link>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}

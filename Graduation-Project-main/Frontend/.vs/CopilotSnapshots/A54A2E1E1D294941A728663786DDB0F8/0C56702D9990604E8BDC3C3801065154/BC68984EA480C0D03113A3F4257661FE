@@ -1,0 +1,131 @@
+﻿import { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { bookingsApi } from '@/api/bookings'
+import { guidesApi } from '@/api/guides'
+import { plansApi } from '@/api/plans'
+import { Button, Card, Select, Textarea } from '@/components/ui'
+import { useToast } from '@/context/ToastContext'
+import { getErrorMessage } from '@/api/axios'
+import { formatCurrency } from '@/utils/format'
+import type { Guide, AiPlan, ManualPlan } from '@/types'
+
+interface PlanOption {
+  id: string
+  name: string
+  type: 'ai' | 'manual'
+  days?: number
+}
+
+export function CreateBookingPage() {
+  const [searchParams] = useSearchParams()
+  const guideIdParam = searchParams.get('guideId')
+  const navigate = useNavigate()
+  const { showToast } = useToast()
+
+  const [plans, setPlans] = useState<PlanOption[]>([])
+  const [guides, setGuides] = useState<Guide[]>([])
+  const [selectedGuideId, setSelectedGuideId] = useState(guideIdParam || '')
+  const [selectedPlanId, setSelectedPlanId] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [aiPlans, manualPlans, activeGuides] = await Promise.all([
+          plansApi.getMyAiPlans(),
+          plansApi.getMyManualPlans(),
+          guidesApi.getActiveGuides()
+        ])
+        
+        const allPlans: PlanOption[] = [
+          ...(aiPlans || []).map(p => ({ id: p.id, name: p.name, type: 'ai' as const, days: p.countDay })),
+          ...(manualPlans || []).map(p => ({ id: p.id, name: p.name, type: 'manual' as const }))
+        ]
+        
+        setPlans(allPlans)
+        setGuides(activeGuides || [])
+      } catch (err) {
+        console.error('Failed to load data', err)
+      }
+    }
+    loadData()
+  }, [])
+
+  const selectedGuide = guides.find(g => g.guideId === selectedGuideId)
+  const selectedPlan = plans.find(p => p.id === selectedPlanId)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!selectedGuideId || !selectedPlanId) {
+      showToast('Please select both a guide and a plan', 'error')
+      return
+    }
+    
+    setIsLoading(true)
+    try {
+      const payload: any = { guideId: selectedGuideId }
+      if (selectedPlan?.type === 'ai') {
+        payload.aiPlanId = selectedPlanId
+      } else {
+        payload.manualPlanId = selectedPlanId
+      }
+      
+      const result = await bookingsApi.createBooking(payload)
+      showToast(result.message || 'Booking request sent successfully!', 'success')
+      navigate(`/bookings/${result.bookingId}`)
+    } catch (err) {
+      showToast(getErrorMessage(err), 'error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-lg">
+      <h1 className="text-2xl font-bold mb-6">New Booking Request</h1>
+      
+      <Card className="p-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <Select
+            label="Select Guide *"
+            value={selectedGuideId}
+            onChange={(e) => setSelectedGuideId(e.target.value)}
+            required
+          >
+            <option value="">-- Select a guide --</option>
+            {guides.map((g) => (
+              <option key={g.guideId} value={g.guideId}>
+                {g.name} - {formatCurrency(g.priceOfDay)}/day ({g.language})
+              </option>
+            ))}
+          </Select>
+          
+          {selectedGuide && (
+            <div className="p-3 bg-primary-50 rounded-xl text-sm">
+              <span className="font-medium">Guide Price:</span> {formatCurrency(selectedGuide.priceOfDay)} per day
+            </div>
+          )}
+          
+          <Select
+            label="Select Plan *"
+            value={selectedPlanId}
+            onChange={(e) => setSelectedPlanId(e.target.value)}
+            required
+          >
+            <option value="">-- Select a plan --</option>
+            {plans.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} ({p.type === 'ai' ? 'AI Plan' : 'Manual Plan'}{p.days ? ` - ${p.days} days` : ''})
+              </option>
+            ))}
+          </Select>
+          
+          <Button type="submit" className="w-full" isLoading={isLoading}>
+            Send Booking Request
+          </Button>
+        </form>
+      </Card>
+    </div>
+  )
+}

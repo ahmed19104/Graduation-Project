@@ -1,0 +1,198 @@
+﻿import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { MapPin, Star, Clock, Ticket, ExternalLink, Upload } from 'lucide-react'
+import { placesApi } from '@/api/places'
+import { reviewsApi } from '@/api/reviews'
+import { useAuth } from '@/context/AuthContext'
+import { Badge, Button, CardSkeleton, StarRating, useToast } from '@/components/ui'
+import { getErrorMessage } from '@/api/axios'
+import type { PlaceDetails, ReviewDisplay } from '@/types'
+import { formatCurrency } from '@/utils/format'
+
+export function PlaceDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const [place, setPlace] = useState<PlaceDetails | null>(null)
+  const [reviews, setReviews] = useState<ReviewDisplay[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [showReviewForm, setShowReviewForm] = useState(false)
+  const [reviewRating, setReviewRating] = useState(5)
+  const [reviewComment, setReviewComment] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { isAuthenticated, hasRole } = useAuth()
+  const { showToast } = useToast()
+
+  useEffect(() => {
+    if (!id) return
+    
+    placesApi.getById(id, 0)
+      .then(setPlace)
+      .catch((err) => showToast(getErrorMessage(err), 'error'))
+      .finally(() => setIsLoading(false))
+  }, [id, showToast])
+
+  const handleSubmitReview = async () => {
+    if (!reviewComment.trim()) {
+      showToast('Please enter a review comment', 'error')
+      return
+    }
+    
+    setIsSubmitting(true)
+    try {
+      await reviewsApi.addPlaceReview({
+        placeId: id!,
+        rate: reviewRating,
+        comment: reviewComment.trim()
+      })
+      showToast('Review added successfully!', 'success')
+      setReviewComment('')
+      setReviewRating(5)
+      setShowReviewForm(false)
+      // Refresh place details
+      const updated = await placesApi.getById(id!, 0)
+      setPlace(updated)
+    } catch (err) {
+      showToast(getErrorMessage(err), 'error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (isLoading) return <div className="container mx-auto px-4 py-8"><CardSkeleton /></div>
+  if (!place) return <div className="container mx-auto px-4 py-8 text-center">Place not found</div>
+
+  return (
+    <div>
+      {/* Hero Image */}
+      <div className="aspect-[21/9] max-h-[400px] overflow-hidden">
+        <img 
+          src={place.mainImageUrl || 'https://placehold.co/1200x400?text=No+Image'} 
+          alt={place.name} 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+          <div>
+            <h1 className="text-3xl font-bold">{place.name}</h1>
+            <div className="flex items-center gap-3 text-slate-500 mt-2">
+              <span className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" />
+                {place.city || 'Egypt'}
+              </span>
+              <span className="flex items-center gap-1 text-amber-500">
+                <Star className="h-4 w-4 fill-current" />
+                {place.averageRate?.toFixed(1) || 'New'} ({place.reviews?.length || 0} reviews)
+              </span>
+            </div>
+          </div>
+          <Badge variant="primary" className="text-sm px-3 py-1">{place.type}</Badge>
+        </div>
+        
+        {/* Info Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+          <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+            <Ticket className="h-8 w-8 text-primary-500" />
+            <div>
+              <p className="text-xs text-slate-500">Entry Fee</p>
+              <p className="font-bold">{place.ticketPrice === 0 ? 'Free' : formatCurrency(place.ticketPrice)}</p>
+            </div>
+          </div>
+          {place.openingHours && (
+            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+              <Clock className="h-8 w-8 text-primary-500" />
+              <div>
+                <p className="text-xs text-slate-500">Opening Hours</p>
+                <p className="font-medium text-sm">{place.openingHours}</p>
+              </div>
+            </div>
+          )}
+          {place.affiliateLink && (
+            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+              <ExternalLink className="h-8 w-8 text-primary-500" />
+              <div>
+                <p className="text-xs text-slate-500">Book Tickets</p>
+                <a href={place.affiliateLink} target="_blank" rel="noopener noreferrer" className="text-primary-600 text-sm font-medium hover:underline">
+                  Book Now →
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {/* Description */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-3">About this place</h2>
+          <p className="text-slate-600 leading-relaxed whitespace-pre-line">
+            {place.description || 'No description available'}
+          </p>
+        </div>
+        
+        {/* User Photos */}
+        {place.userPhotos && place.userPhotos.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-3">Traveler Photos</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {place.userPhotos.slice(0, 4).map((photo, idx) => (
+                <img
+                  key={idx}
+                  src={photo.photoUrl}
+                  alt={`User photo by ${photo.userName}`}
+                  className="w-full h-32 object-cover rounded-lg"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Reviews Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Reviews ({place.reviews?.length || 0})</h2>
+            {isAuthenticated && hasRole('Tourist') && !showReviewForm && (
+              <Button variant="outline" onClick={() => setShowReviewForm(true)}>
+                Write a Review
+              </Button>
+            )}
+          </div>
+          
+          {/* Review Form */}
+          {showReviewForm && (
+            <div className="bg-slate-50 rounded-xl p-4 mb-6">
+              <h3 className="font-semibold mb-3">Rate your experience</h3>
+              <StarRating rating={reviewRating} onRate={setReviewRating} interactive />
+              <textarea
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                placeholder="Share details of your experience..."
+                className="w-full mt-3 p-3 border border-slate-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                rows={3}
+              />
+              <div className="flex gap-2 mt-3 justify-end">
+                <Button variant="ghost" onClick={() => setShowReviewForm(false)}>Cancel</Button>
+                <Button onClick={handleSubmitReview} isLoading={isSubmitting}>Submit Review</Button>
+              </div>
+            </div>
+          )}
+          
+          {/* Reviews List */}
+          <div className="space-y-3">
+            {place.reviews && place.reviews.length > 0 ? (
+              place.reviews.map((review, idx) => (
+                <div key={idx} className="p-4 bg-white border border-slate-100 rounded-xl">
+                  <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                    <span className="font-semibold">{review.touristName}</span>
+                    <StarRating rating={review.rate} />
+                  </div>
+                  <p className="text-sm text-slate-600">{review.comment}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-slate-500 text-sm">No reviews yet. Be the first to review!</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

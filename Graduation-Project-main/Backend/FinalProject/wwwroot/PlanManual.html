@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egypt Tours - الخطة اليدوية</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .cart-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .place-card {
+            transition: transform 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .place-card:hover {
+                transform: scale(1.02);
+            }
+
+        .card-img-top {
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-4">
+        <h2 class="text-center text-primary mb-4">🌍 Egypt Tours - بناء خطتك اليدوية</h2>
+
+        <div class="alert alert-warning">
+            <strong>للتجربة:</strong> قم بعمل Login من Swagger، وانسخ الـ Token هنا لكي يعمل الفرونت إند.<br>
+            <input type="text" id="jwtToken" class="form-control mt-2" placeholder="ضع الـ Bearer Token هنا...">
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <h4>1. اختر الأماكن التي تود زيارتها:</h4>
+                <div class="row" id="placesCatalog">
+                    <div class="text-center text-muted">جاري جلب الأماكن من السيرفر... ⏳</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="cart-box">
+                    <h4 class="text-success">🛒 سلة الخطة</h4>
+                    <hr>
+                    <div class="mb-3">
+                        <label>اسم الخطة:</label>
+                        <input type="text" id="planName" class="form-control" placeholder="مثال: رحلة الصيف لأسوان">
+                    </div>
+                    <div class="mb-3">
+                        <label>تاريخ البداية:</label>
+                        <input type="date" id="startDate" class="form-control">
+                    </div>
+
+                    <h5>الأماكن المختارة:</h5>
+                    <ul id="selectedPlacesList" class="list-group mb-3">
+                        <li class="list-group-item text-muted">السلة فارغة، اختر أماكن أولاً.</li>
+                    </ul>
+
+                    <button class="btn btn-primary w-100" onclick="savePlan()">💾 حفظ الخطة في السيرفر</button>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="text-info">📂 خططي المحفوظة</h3>
+                <button class="btn btn-secondary mb-3" onclick="loadMyPlans()">🔄 تحديث وعرض خططي</button>
+                <div class="row" id="myPlansContainer">
+                    <div class="text-muted">اضغط على تحديث لعرض الخطط...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let availablePlaces = []; // دي هتشيل الأماكن الحقيقية اللي جاية من السيرفر
+        let currentCart = [];
+
+        // ==========================================
+        // 1. جلب الأماكن الحقيقية من الداتا بيز
+        // ==========================================
+        async function fetchPlaces() {
+            try {
+                // 🚨 لو اسم الـ Endpoint بتاعتك مختلف، غيره هنا 🚨
+                const response = await fetch('/api/Places');
+
+                if (response.ok) {
+                    const result = await response.json();
+                    // بنعمل حساب إن الـ API ممكن يرجع الداتا جوه result.data أو يرجعها مباشر
+                    availablePlaces = result.data || result;
+                    renderPlaces();
+                } else {
+                    document.getElementById('placesCatalog').innerHTML = '<div class="alert alert-danger">فشل في جلب الأماكن.</div>';
+                }
+            } catch (error) {
+                console.error("Error fetching places:", error);
+                document.getElementById('placesCatalog').innerHTML = '<div class="alert alert-danger">حدث خطأ في الاتصال بالسيرفر.</div>';
+            }
+        }
+
+        // 2. رسم الأماكن في الشاشة
+        function renderPlaces() {
+            const container = document.getElementById('placesCatalog');
+            container.innerHTML = '';
+
+            if (availablePlaces.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">لا توجد أماكن متاحة في قاعدة البيانات حالياً.</div>';
+                return;
+            }
+
+            availablePlaces.forEach(place => {
+                // بنظبط أسماء المتغيرات عشان لو الـ API بتاعك بيرجعها بحروف سمول أو كابيتال
+                const id = place.id || place.Id;
+                const name = place.name || place.Name;
+                const desc = place.description || place.Description || "لا يوجد وصف";
+                const image = place.imageUrl || place.ImageUrl || "https://via.placeholder.com/300x150?text=No+Image";
+
+                container.innerHTML += `
+                    <div class="col-md-6 mb-3">
+                        <div class="card place-card shadow-sm">
+                            <img src="${image}" class="card-img-top" alt="${name}">
+                            <div class="card-body">
+                                <div>
+                                    <h5 class="card-title text-primary">${name}</h5>
+                                    <p class="card-text text-muted" style="font-size: 14px;">${desc.substring(0, 80)}...</p>
+                                </div>
+                                <button class="btn btn-outline-success btn-sm mt-3 w-100" onclick="addToPlan('${id}', '${name}')">➕ إضافة للخطة</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 3. إضافة مكان للسلة
+        function addToPlan(placeId, placeName) {
+            let dayStr = prompt(`في أي يوم من رحلتك تود زيارة (${placeName})؟ (اكتب رقم، مثلاً 1 أو 2)`);
+            if (!dayStr) return;
+
+            let dayNum = parseInt(dayStr);
+            if (isNaN(dayNum) || dayNum < 1) {
+                alert("يرجى إدخال رقم يوم صحيح."); return;
+            }
+
+            currentCart.push({ placeId: placeId, placeName: placeName, dayNumber: dayNum });
+            updateCartUI();
+        }
+
+        // 4. تحديث شكل السلة
+        function updateCartUI() {
+            const list = document.getElementById('selectedPlacesList');
+            if (currentCart.length === 0) {
+                list.innerHTML = '<li class="list-group-item text-muted">السلة فارغة.</li>';
+                return;
+            }
+
+            list.innerHTML = '';
+            currentCart.forEach((item, index) => {
+                list.innerHTML += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div><strong>اليوم ${item.dayNumber}:</strong> ${item.placeName}</div>
+                        <button class="btn btn-sm btn-danger" onclick="removeFromCart(${index})">X</button>
+                    </li>
+                `;
+            });
+        }
+
+        // 5. مسح مكان من السلة
+        function removeFromCart(index) {
+            currentCart.splice(index, 1);
+            updateCartUI();
+        }
+
+        // ==========================================
+        // 6. الضربة للـ Backend (حفظ الخطة الحقيقية)
+        // ==========================================
+        async function savePlan() {
+            const token = document.getElementById('jwtToken').value;
+            const name = document.getElementById('planName').value;
+            const startDateStr = document.getElementById('startDate').value;
+
+            if (!token) return alert("يرجى وضع التوكن أولاً!");
+            if (!name || !startDateStr) return alert("يرجى كتابة اسم الخطة وتاريخ البداية.");
+            if (currentCart.length === 0) return alert("يرجى اختيار مكان واحد على الأقل.");
+
+            const selectedDate = new Date(startDateStr);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (selectedDate < today) return alert("عفواً، لا يمكن عمل خطة في الماضي!");
+
+            const payload = {
+                name: name,
+                startDate: new Date(startDateStr).toISOString(),
+                selectedPlaces: currentCart.map(item => ({
+                    placeId: item.placeId,
+                    dayNumber: item.dayNumber
+                }))
+            };
+
+            try {
+                const response = await fetch('/api/Plans/manual-generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert("🎉 " + result.message);
+                    currentCart = [];
+                    document.getElementById('planName').value = '';
+                    updateCartUI();
+                    loadMyPlans();
+                } else {
+                    alert("❌ خطأ: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("حدث خطأ في الاتصال بالسيرفر.");
+            }
+        }
+
+        // ==========================================
+        // 7. جلب الخطط المحفوظة
+        // ==========================================
+        async function loadMyPlans() {
+            const token = document.getElementById('jwtToken').value;
+            if (!token) return alert("يرجى وضع التوكن أولاً!");
+
+            const container = document.getElementById('myPlansContainer');
+            container.innerHTML = '<div class="text-center">جاري التحميل...</div>';
+
+            try {
+                const response = await fetch('/api/Tourists/my-manual-plans', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    container.innerHTML = '';
+                    if (result.data.length === 0) {
+                        container.innerHTML = '<div class="alert alert-info">لا يوجد لديك خطط محفوظة.</div>';
+                        return;
+                    }
+
+                    result.data.forEach(plan => {
+                        let sDate = new Date(plan.startDate).toLocaleDateString('ar-EG');
+                        let placesHtml = plan.places.map(p => `<li>اليوم ${p.dayNumber}: ${p.placeName}</li>`).join('');
+
+                        container.innerHTML += `
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-info h-100">
+                                    <div class="card-header bg-info text-white fw-bold">${plan.name}</div>
+                                    <div class="card-body">
+                                        <p class="text-muted"><small>تاريخ البداية: ${sDate}</small></p>
+                                        <hr>
+                                        <h6 class="text-primary">مسار الرحلة:</h6>
+                                        <ul class="mb-0">${placesHtml}</ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div class="alert alert-danger">خطأ في جلب البيانات</div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="alert alert-danger">حدث خطأ في الاتصال</div>';
+            }
+        }
+
+        // تشغيل جلب الأماكن فور فتح الصفحة
+        fetchPlaces();
+
+    </script>
+</body>
+</html>
