@@ -8,6 +8,6 @@ namespace BLL.Service.Abstraction
 {
     public interface IAiIntegrationService
     {
-        Task<string> GetPlanFromPythonApi(int days, decimal budget, string type);
+        Task<string> GetPlanFromPythonApi(int days, decimal budget, string type,string Governorate);
     }
 }

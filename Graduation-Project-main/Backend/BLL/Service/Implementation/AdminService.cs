@@ -355,9 +355,10 @@ namespace BLL.Service.Implementation
 
             // هنجيب كل المستخدمين اللي نوعهم "سياح"
             var touristUsers = await _userManager.Users
-             .Where(u => u.TouristProfile != null) // تأكد إن الـ Navigation Property دي موجودة أو استخدم طريقة الـ Role
+                .Where(u => u.TouristProfile != null)
                 .Include(u => u.TouristProfile)
-             .ToListAsync();
+                .AsNoTracking()
+                .ToListAsync();
 
 
 
@@ -406,6 +407,7 @@ namespace BLL.Service.Implementation
             var completedBookings = await _unitOfWork.Bookings.FindAsync(b => b.State == "Completed");
             stats.TotalCompletedBookings = completedBookings.Count();
             stats.TotalSystemRevenue = completedBookings.Sum(b => b.CommissionAmount);
+            completedBookings = null; // release memory early
 
 
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Check, X, Eye } from 'lucide-react'
 import { adminApi } from '@/api/admin'
-import { Avatar, Button, Card, ListSkeleton, Badge } from '@/components/ui'
+import { Avatar, Button, Card, ConfirmDialog, ListSkeleton, Badge } from '@/components/ui'
 import { useToast } from '@/context/ToastContext'
 import { getErrorMessage } from '@/api/axios'
 import { formatCurrency } from '@/utils/format'
@@ -15,6 +15,7 @@ export function AdminPendingGuidesPage() {
     url: '',
     name: '',
   })
+  const [rejectTarget, setRejectTarget] = useState<string | null>(null)
   const { showToast } = useToast()
 
   const load = () => {
@@ -37,10 +38,14 @@ export function AdminPendingGuidesPage() {
     }
   }
 
-  const handleReject = async (guideId: string) => {
-    if (!confirm('Are you sure you want to reject this guide? This action cannot be undone.')) return
+  const handleReject = (guideId: string) => setRejectTarget(guideId)
+
+  const handleConfirmReject = async () => {
+    if (!rejectTarget) return
+    const id = rejectTarget
+    setRejectTarget(null)
     try {
-      await adminApi.rejectGuide(guideId)
+      await adminApi.rejectGuide(id)
       showToast('Guide rejected', 'success')
       load()
     } catch (err) {
@@ -171,6 +176,16 @@ export function AdminPendingGuidesPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={rejectTarget !== null}
+        title="Reject Guide"
+        message="Are you sure you want to reject this guide? This action cannot be undone."
+        confirmLabel="Reject"
+        danger
+        onConfirm={handleConfirmReject}
+        onCancel={() => setRejectTarget(null)}
+      />
     </div>
   )
 }

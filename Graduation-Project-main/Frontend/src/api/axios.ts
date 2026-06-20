@@ -61,8 +61,12 @@ api.interceptors.response.use(
   },
   (error: AxiosError<ApiEnvelope>) => {
     if (error.response?.status === 401) {
+      const hadToken = !!storage.getToken()
       storage.clearAuth()
-      if (!window.location.pathname.startsWith('/login')) {
+      // Only hard-redirect when the request was authenticated (expired/revoked session).
+      // Anonymous requests to auth-guarded endpoints (e.g. public pages calling /api/places)
+      // should just reject normally — not hijack the whole page.
+      if (hadToken && !window.location.pathname.startsWith('/login')) {
         window.location.href = '/login'
       }
     }
@@ -77,4 +81,9 @@ export function getErrorMessage(error: unknown): string {
   }
   if (error instanceof Error) return error.message
   return 'An unexpected error occurred'
+}
+
+/** Returns true when the error is a 401 — used to silently skip toasts on public pages. */
+export function isUnauthorizedError(error: unknown): boolean {
+  return axios.isAxiosError(error) && error.response?.status === 401
 }

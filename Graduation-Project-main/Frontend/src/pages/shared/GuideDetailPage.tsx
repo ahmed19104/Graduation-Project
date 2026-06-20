@@ -5,7 +5,7 @@ import { guidesApi } from '@/api/guides'
 import { reviewsApi } from '@/api/reviews'
 import { Avatar, Badge, Button, Card, CardSkeleton, StarRating } from '@/components/ui'
 import { formatCurrency } from '@/utils/format'
-import { getErrorMessage } from '@/api/axios'
+import { getErrorMessage, isUnauthorizedError } from '@/api/axios'
 import { useToast } from '@/context/ToastContext'
 import { useAuth } from '@/context/AuthContext'
 import type { GuideDetails, ReviewDisplay } from '@/types'
@@ -29,7 +29,7 @@ export function GuideDetailPage() {
         setGuide(g)
         setReviews(r)
       })
-      .catch((err) => showToast(getErrorMessage(err), 'error'))
+      .catch((err) => { if (!isUnauthorizedError(err)) showToast(getErrorMessage(err), 'error') })
       .finally(() => setIsLoading(false))
   }, [id, showToast])
 
@@ -49,20 +49,20 @@ export function GuideDetailPage() {
           
           <div className="flex items-center gap-2 mt-2">
             <StarRating rating={guide.rate} />
-            <span className="text-sm text-slate-500">({guide.reviews?.length || 0} reviews)</span>
+            <span className="text-sm text-slate-500 dark:text-slate-300">({guide.reviews?.length || 0} reviews)</span>
           </div>
-          
-          <div className="flex flex-wrap gap-4 mt-3 text-sm text-slate-600">
+
+          <div className="flex flex-wrap gap-4 mt-3 text-sm text-slate-600 dark:text-slate-300">
             <span className="flex items-center gap-1">
               <Languages className="h-4 w-4 text-primary-500" />
               {guide.language}
             </span>
           </div>
-          
-          <p className="mt-4 text-slate-700 leading-relaxed">{guide.bio || 'No bio provided'}</p>
-          
+
+          <p className="mt-4 text-slate-700 dark:text-slate-200 leading-relaxed">{guide.bio || 'No bio provided'}</p>
+
           <p className="mt-4 text-xl font-bold text-primary-600">
-            {formatCurrency(guide.priceOfDay)} <span className="text-sm font-normal text-slate-500">/ day</span>
+            {formatCurrency(guide.priceOfDay)} <span className="text-sm font-normal text-slate-500 dark:text-slate-300">/ day</span>
           </p>
           
           {isAuthenticated && hasRole('Tourist') && (
@@ -83,7 +83,7 @@ export function GuideDetailPage() {
       
       <div className="space-y-3">
         {reviews.length === 0 ? (
-          <p className="text-slate-500 text-sm">No reviews yet</p>
+          <p className="text-slate-500 dark:text-slate-300 text-sm">No reviews yet</p>
         ) : (
           reviews.map((r, idx) => (
             <Card key={idx} className="p-4">
@@ -91,7 +91,7 @@ export function GuideDetailPage() {
                 <span className="font-semibold">{r.reviewerName}</span>
                 <StarRating rating={r.rate} />
               </div>
-              <p className="text-sm text-slate-600 mt-2">{r.comment}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">{r.comment}</p>
             </Card>
           ))
         )}

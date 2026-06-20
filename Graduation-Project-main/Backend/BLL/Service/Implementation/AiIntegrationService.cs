@@ -1,4 +1,5 @@
 using BLL.ModelVm.AiPlane;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace BLL.Service.Implementation
@@ -8,58 +9,60 @@ namespace BLL.Service.Implementation
         private readonly HttpClient _httpClient;
         private readonly IUnitOfWork _unitOfWork;
 
+
+
         public AiIntegrationService(HttpClient httpClient, IUnitOfWork unitOfWork)
         {
             _httpClient = httpClient;
             _unitOfWork = unitOfWork;
         }
 
-        /// <summary>
-        /// Calls the Python AI API.
-        /// While the Python team is not ready, falls back to a DB-aware mock that
-        /// always returns valid IdFromModel values from the actual Places table,
-        /// so the frontend can display real place details.
-        /// </summary>
-        public async Task<string> GetPlanFromPythonApi(int days, decimal budget, string type)
+        #region Correct
+        //الدالة دي مقفولة لحد ما تيم البايثون يخلص
+        public async Task<string> GetPlanFromPythonApi(int days, decimal budget, string type, string Governorate)
         {
-            // ── Real API (uncomment when the Python service is ready) ──────────────
-            // try
-            // {
-            //     var res = await _httpClient.PostAsJsonAsync(
-            //         "http://localhost:5000/api/generate-plan",
-            //         new { days, budget, type });
-            //     if (res.IsSuccessStatusCode)
-            //         return await res.Content.ReadAsStringAsync();
-            // }
-            // catch { /* fall through to mock */ }
-            // ────────────────────────────────────────────────────────────────────────
-
-            // DB-aware mock: read places that have IdFromModel > 0 (set by the migration)
-            // and build a plan that references their real integer IDs.
-            var places = (await _unitOfWork.Places.FindAsync(p => p.IdFromModel > 0))
-                .OrderBy(p => p.IdFromModel)
-                .ToList();
-
-            if (!places.Any())
+            var requestData = new { governorate = Governorate, budget_egp = (int)budget, duration_days = days, interests = new[] { type } };
+            try
             {
-                // No places seeded yet — return an empty plan rather than broken IDs.
-                return "[]";
-            }
+                var pythonApiUrl = "https://osama152-athar-tourism-api.hf.space/recommend";
+                var response = await _httpClient.PostAsJsonAsync(pythonApiUrl, requestData);
 
-            // Spread places across the requested number of days (cycle if fewer places than days).
-            var items = Enumerable.Range(1, days)
-                .Select(day =>
+                var responseText = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var place = places[(day - 1) % places.Count];
-                    return new PythonAiResponseItem
-                    {
-                        DayNumber = day,
-                        PlaceId   = place.IdFromModel,
-                    };
-                })
-                .ToList();
+                    return responseText;
+                }
 
-            return JsonSerializer.Serialize(items);
+                throw new Exception(
+                    $"Status: {response.StatusCode}\nResponse: {responseText}"
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error calling Python API: {ex.Message}");
+            }
         }
     }
 }
+
+
+#endregion
+
+//#region Fake (Mocking)
+//public async Task<string> GetPlanFromPythonApi(int days, decimal budget, string type)
+//{
+//    // 🚨 غير الـ GUIDs دي وحط IDs حقيقية من جدول الأماكن (Places) اللي عندك في الـ SQL
+//    // عشان الفرونت إند يلاقي داتا يعرضها
+//    string fakePythonResponse = @"[
+//    { ""day"": 1, ""place_id"": 8 },
+//    { ""day"": 2, ""place_id"": 9}
+
+//]";
+
+//    return await Task.FromResult(fakePythonResponse);
+//}
+//#endregion
+
+
+

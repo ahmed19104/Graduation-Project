@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Camera, Heart, Eye, Plus, Trash2 } from 'lucide-react'
 import { storiesApi } from '@/api/stories'
-import { Button, Card, EmptyState, ListSkeleton, Modal, Input, Textarea } from '@/components/ui'
+import { Button, Card, ConfirmDialog, EmptyState, ListSkeleton, Modal, Input, Textarea } from '@/components/ui'
 import { useToast } from '@/context/ToastContext'
 import { useAuth } from '@/context/AuthContext'
 import { getErrorMessage } from '@/api/axios'
@@ -9,11 +9,25 @@ import { formatRelativeTime } from '@/utils/format'
 import { absoluteMediaUrl } from '@/utils/media'
 import type { Story } from '@/types'
 
+const MAX_VIDEO_DURATION_S = 30
+
+function getVideoDuration(file: File): Promise<number> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file)
+    const video = document.createElement('video')
+    video.preload = 'metadata'
+    video.onloadedmetadata = () => { URL.revokeObjectURL(url); resolve(video.duration) }
+    video.onerror = () => { URL.revokeObjectURL(url); resolve(0) }
+    video.src = url
+  })
+}
+
 export function GuideStoriesPage() {
   const [stories, setStories] = useState<Story[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
   const [storyForm, setStoryForm] = useState({ city: '', description: '' })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -35,10 +49,19 @@ export function GuideStoriesPage() {
 
   useEffect(() => { loadStories() }, [loadStories])
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) { setSelectedFile(file); setShowModal(true) }
     e.target.value = ''
+    if (!file) return
+    if (file.type.startsWith('video/')) {
+      const dur = await getVideoDuration(file)
+      if (dur > MAX_VIDEO_DURATION_S) {
+        showToast(`Video must be ${MAX_VIDEO_DURATION_S} seconds or shorter.`, 'error')
+        return
+      }
+    }
+    setSelectedFile(file)
+    setShowModal(true)
   }
 
   const handleCreateStory = async () => {
@@ -63,11 +86,15 @@ export function GuideStoriesPage() {
     } finally { setIsUploading(false) }
   }
 
-  const handleDelete = async (storyId: string) => {
-    if (!confirm('Delete this story permanently?')) return
+  const handleDelete = (storyId: string) => setDeleteTargetId(storyId)
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTargetId) return
+    const id = deleteTargetId
+    setDeleteTargetId(null)
     try {
-      await storiesApi.deleteOwn(storyId)
-      setStories((prev) => prev.filter((s) => s.storyId !== storyId))
+      await storiesApi.deleteOwn(id)
+      setStories((prev) => prev.filter((s) => s.storyId !== id))
       showToast('Story deleted.', 'success')
     } catch (err) {
       showToast(getErrorMessage(err), 'error')
@@ -173,6 +200,16 @@ export function GuideStoriesPage() {
           </div>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={deleteTargetId !== null}
+        title="Delete Story"
+        message="This story will be permanently deleted and cannot be recovered."
+        confirmLabel="Delete"
+        danger
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+      />
     </div>
   )
 }

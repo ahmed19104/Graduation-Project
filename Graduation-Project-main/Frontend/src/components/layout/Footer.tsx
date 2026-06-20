@@ -1,17 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Globe, Mail, Share2 } from 'lucide-react'
+import { Logo } from '@/components/brand/Logo'
 
 export function Footer() {
   return (
-    <footer className="mt-auto bg-slate-950 text-slate-300">
+    <footer className="mt-auto bg-slate-950 dark:bg-night-900 text-slate-300">
       <div className="container-app py-12 sm:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-8">
           <div className="md:col-span-2">
             <div className="mb-4 flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-xl font-black text-white shadow-lg shadow-primary-900/30">
-                A
-              </div>
-              <span className="text-xl font-bold text-white">Ather</span>
+              <Logo />
+              {/* <span className="text-xl font-bold text-white">Ather</span> */}
             </div>
             <p className="max-w-md text-sm leading-relaxed text-slate-400">
               The smart Egyptian tourism platform — connect with verified tour guides,
@@ -51,7 +50,7 @@ export function Footer() {
                 <a
                   key={i}
                   href="#"
-                  className="rounded-lg bg-slate-800/80 p-2.5 text-slate-300 ring-1 ring-slate-700 transition-all hover:bg-primary-600 hover:text-white hover:ring-primary-500"
+                  className="rounded-lg bg-slate-800/80 dark:bg-night-800 p-2.5 text-slate-300 ring-1 ring-slate-700 dark:ring-night-700 transition-all hover:bg-primary-600 hover:text-white hover:ring-primary-500"
                   aria-label="Social link"
                 >
                   <Icon className="h-4 w-4" />
@@ -61,7 +60,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-slate-800 pt-6 text-xs text-slate-500 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-slate-800 dark:border-night-800 pt-6 text-xs text-slate-500 dark:text-slate-400 sm:flex-row">
           <span>© {new Date().getFullYear()} Ather — All rights reserved.</span>
           <span>Built for explorers of the Nile and beyond.</span>
         </div>

@@ -11,7 +11,7 @@ import {
   X,
 } from 'lucide-react'
 import { storiesApi } from '@/api/stories'
-import { Avatar, Button, EmptyState, GridSkeleton, Modal, Input, Textarea } from '@/components/ui'
+import { Avatar, Button, ConfirmDialog, EmptyState, GridSkeleton, Modal, Input, Textarea } from '@/components/ui'
 import { useToast } from '@/context/ToastContext'
 import { useAuth } from '@/context/AuthContext'
 import { getErrorMessage } from '@/api/axios'
@@ -26,8 +26,21 @@ const TAP_HOLD_THRESHOLD_MS = 220
 // Anywhere inside the left 30% pane is "previous"; the rest (70%) is "next".
 const LEFT_TAP_RATIO = 0.3
 
+const MAX_VIDEO_DURATION_S = 30
+
 function isVideo(url: string): boolean {
   return /\.(mp4|mov|webm|mkv)$/i.test(url)
+}
+
+function getVideoDuration(file: File): Promise<number> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file)
+    const video = document.createElement('video')
+    video.preload = 'metadata'
+    video.onloadedmetadata = () => { URL.revokeObjectURL(url); resolve(video.duration) }
+    video.onerror = () => { URL.revokeObjectURL(url); resolve(0) }
+    video.src = url
+  })
 }
 
 function sortFeed(stories: Story[], myId: string | undefined): Story[] {
@@ -46,13 +59,14 @@ export function StoriesPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [isPaused, setIsPaused] = useState(false)
-  const [progress, setProgress] = useState(0)
   const [composerOpen, setComposerOpen] = useState(false)
   const [composerCity, setComposerCity] = useState('')
   const [composerDescription, setComposerDescription] = useState('')
   const [composerFile, setComposerFile] = useState<File | null>(null)
   const [isPublishing, setIsPublishing] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [storyDurMs, setStoryDurMs] = useState<number | null>(STORY_DURATION_MS)
   const { showToast } = useToast()
   const { user } = useAuth()
   const viewedRef = useRef<Set<string>>(new Set())
@@ -65,6 +79,9 @@ export function StoriesPage() {
   const heldDuringPressRef = useRef<boolean>(false)
   const pressXRef = useRef<number>(0)
   const pressWidthRef = useRef<number>(0)
+  const progressRef = useRef(0)
+  const activeBarRef = useRef<HTMLDivElement | null>(null)
+  const viewerVideoRef = useRef<HTMLVideoElement | null>(null)
 
   const load = useCallback(async () => {
     setIsLoading(true)
@@ -85,9 +102,18 @@ export function StoriesPage() {
   const sorted = useMemo(() => sortFeed(stories, user?.id), [stories, user?.id])
   const activeStory = activeIndex !== null ? sorted[activeIndex] : null
 
+  // Reset duration when story changes; videos wait for onLoadedMetadata
+  useEffect(() => {
+    if (!activeStory) return
+    if (!isVideo(activeStory.mediaUrl)) {
+      setStoryDurMs(STORY_DURATION_MS)
+    } else {
+      setStoryDurMs(null)
+    }
+  }, [activeStory])
+
   const closeViewer = useCallback(() => {
     setActiveIndex(null)
-    setProgress(0)
     if (tickerRef.current !== null) {
       window.clearInterval(tickerRef.current)
       tickerRef.current = null
@@ -101,7 +127,6 @@ export function StoriesPage() {
         return
       }
       setActiveIndex(next)
-      setProgress(0)
     },
     [closeViewer, sorted.length]
   )
@@ -124,25 +149,29 @@ export function StoriesPage() {
       })
   }, [activeStory])
 
+  // Progress ticker — direct DOM update, no React re-renders
   useEffect(() => {
-    if (activeIndex === null || isPaused) return
+    if (activeIndex === null || isPaused || storyDurMs === null) return
     if (tickerRef.current !== null) window.clearInterval(tickerRef.current)
+    progressRef.current = 0
+    if (activeBarRef.current) activeBarRef.current.style.width = '0%'
     const step = 50
-    const inc = (step / STORY_DURATION_MS) * 100
+    const inc = (step / storyDurMs) * 100
     tickerRef.current = window.setInterval(() => {
-      setProgress((p) => {
-        const next = p + inc
-        if (next >= 100) {
-          goTo(activeIndex + 1)
-          return 0
-        }
-        return next
-      })
+      progressRef.current += inc
+      if (progressRef.current >= 100) {
+        progressRef.current = 0
+        goTo(activeIndex + 1)
+        return
+      }
+      if (activeBarRef.current) {
+        activeBarRef.current.style.width = `${progressRef.current}%`
+      }
     }, step)
     return () => {
       if (tickerRef.current !== null) window.clearInterval(tickerRef.current)
     }
-  }, [activeIndex, isPaused, goTo])
+  }, [activeIndex, isPaused, goTo, storyDurMs])
 
   useEffect(() => {
     if (activeIndex === null) return
@@ -158,6 +187,13 @@ export function StoriesPage() {
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [activeIndex, closeViewer, goTo])
+
+  // Sync video playback with pause state
+  useEffect(() => {
+    if (!viewerVideoRef.current) return
+    if (isPaused) viewerVideoRef.current.pause()
+    else viewerVideoRef.current.play().catch(() => {})
+  }, [isPaused])
 
   const toggleLove = async (story: Story) => {
     setStories((prev) =>
@@ -189,7 +225,14 @@ export function StoriesPage() {
     }
   }
 
-  const handleFilePicked = (file: File) => {
+  const handleFilePicked = async (file: File) => {
+    if (file.type.startsWith('video/')) {
+      const dur = await getVideoDuration(file)
+      if (dur > MAX_VIDEO_DURATION_S) {
+        showToast(`Video must be ${MAX_VIDEO_DURATION_S} seconds or shorter.`, 'error')
+        return
+      }
+    }
     setComposerFile(file)
     setComposerOpen(true)
   }
@@ -229,7 +272,6 @@ export function StoriesPage() {
 
   const deleteActiveStory = async () => {
     if (!activeStory) return
-    if (!confirm('Delete this story permanently?')) return
     setIsDeleting(true)
     try {
       await storiesApi.deleteOwn(activeStory.storyId)
@@ -353,19 +395,28 @@ export function StoriesPage() {
               type="button"
               onClick={() => {
                 setActiveIndex(idx)
-                setProgress(0)
                 setIsPaused(false)
               }}
               className="flex w-20 shrink-0 flex-col items-center gap-1.5 outline-none"
             >
               <span className={cn(viewed ? 'story-ring--viewed' : 'story-ring')}>
-                <span className="block h-20 w-20 overflow-hidden rounded-full bg-white p-[2px] dark:bg-night-900">
-                  <Avatar
-                    src={story.userProfileImage}
-                    name={story.userName}
-                    size="lg"
-                    className="!h-full !w-full"
-                  />
+                <span className="block h-20 w-20 overflow-hidden rounded-full ring-2 ring-white dark:ring-gray-950">
+                  {isVideo(story.mediaUrl) ? (
+                    <video
+                      src={absoluteMediaUrl(story.mediaUrl)}
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={absoluteMediaUrl(story.mediaUrl)}
+                      alt={story.userName}
+                      className="h-full w-full rounded-full object-cover"
+                      loading="lazy"
+                    />
+                  )}
                 </span>
               </span>
               <span className="line-clamp-1 max-w-[5rem] text-xs font-medium text-slate-700 dark:text-slate-300">
@@ -396,7 +447,6 @@ export function StoriesPage() {
                 type="button"
                 onClick={() => {
                   setActiveIndex(idx)
-                  setProgress(0)
                   setIsPaused(false)
                 }}
                 className="group relative aspect-[9/16] overflow-hidden rounded-2xl bg-slate-900 ring-1 ring-slate-200 transition-transform hover:-translate-y-0.5 hover:ring-primary-300 dark:ring-night-700"
@@ -480,17 +530,9 @@ export function StoriesPage() {
                   className="h-1 flex-1 overflow-hidden rounded-full bg-white/30"
                 >
                   <div
-                    className={cn(
-                      'h-full bg-white transition-[width] duration-75 ease-linear',
-                      activeIndex !== null && i < activeIndex && 'w-full'
-                    )}
-                    style={
-                      activeIndex === i
-                        ? { width: `${progress}%` }
-                        : i > (activeIndex ?? -1)
-                          ? { width: 0 }
-                          : undefined
-                    }
+                    ref={activeIndex === i ? activeBarRef : null}
+                    className="h-full bg-white transition-[width] duration-[50ms] ease-linear"
+                    style={{ width: i < (activeIndex ?? -1) ? '100%' : '0%' }}
                   />
                 </div>
               ))}
@@ -511,7 +553,7 @@ export function StoriesPage() {
               {activeStory.userId === user?.id && (
                 <button
                   type="button"
-                  onClick={deleteActiveStory}
+                  onClick={() => setConfirmDelete(true)}
                   disabled={isDeleting}
                   className="rounded-full bg-white/10 p-2 backdrop-blur transition-colors hover:bg-rose-500/70 disabled:opacity-50"
                   aria-label="Delete story"
@@ -534,11 +576,15 @@ export function StoriesPage() {
             <div className="relative h-full w-full select-none">
               {isVideo(activeStory.mediaUrl) ? (
                 <video
+                  ref={viewerVideoRef}
                   src={absoluteMediaUrl(activeStory.mediaUrl)}
                   autoPlay
                   playsInline
-                  muted
                   className="h-full w-full object-cover"
+                  onLoadedMetadata={(e) => {
+                    const dur = e.currentTarget.duration
+                    setStoryDurMs(isFinite(dur) && dur > 0 ? Math.min(dur, MAX_VIDEO_DURATION_S) * 1000 : STORY_DURATION_MS)
+                  }}
                 />
               ) : (
                 <img
@@ -656,6 +702,16 @@ export function StoriesPage() {
           </div>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={confirmDelete}
+        title="Delete Story"
+        message="This story will be permanently deleted and cannot be recovered."
+        confirmLabel="Delete"
+        danger
+        onConfirm={() => { setConfirmDelete(false); deleteActiveStory() }}
+        onCancel={() => setConfirmDelete(false)}
+      />
     </div>
   )
 }

@@ -3,8 +3,9 @@ import { Search, Users } from 'lucide-react'
 import { guidesApi } from '@/api/guides'
 import { GuideCard } from '@/components/shared/GuideCard'
 import { CardSkeleton, EmptyState, Input } from '@/components/ui'
-import { getErrorMessage } from '@/api/axios'
+import { getErrorMessage, isUnauthorizedError } from '@/api/axios'
 import { useToast } from '@/context/ToastContext'
+import { useAuth } from '@/context/AuthContext'
 import type { Guide } from '@/types'
 
 const LANGUAGES = ['All', 'Arabic', 'English', 'French', 'Spanish', 'German', 'Italian']
@@ -17,6 +18,7 @@ export function GuidesPage() {
   const [language, setLanguage] = useState('All')
   const [sortBy, setSortBy] = useState<'rating' | 'price_low' | 'price_high'>('rating')
   const { showToast } = useToast()
+  const { isAuthenticated } = useAuth()
 
   useEffect(() => {
     const load = async () => {
@@ -26,7 +28,9 @@ export function GuidesPage() {
         setGuides(data)
         setFilteredGuides(data)
       } catch (err) {
-        showToast(getErrorMessage(err), 'error')
+        // Public page: only show toast for real errors when authenticated.
+        // Anonymous users hitting auth-guarded endpoints should see empty state silently.
+        if (isAuthenticated && !isUnauthorizedError(err)) showToast(getErrorMessage(err), 'error')
       } finally {
         setIsLoading(false)
       }
@@ -66,7 +70,7 @@ export function GuidesPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-2">Tour Guides</h1>
-      <p className="text-slate-500 mb-6">Choose your perfect local guide</p>
+      <p className="text-slate-500 dark:text-slate-300 mb-6">Choose your perfect local guide</p>
 
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="relative flex-1">
@@ -82,7 +86,7 @@ export function GuidesPage() {
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:border-night-700 dark:bg-night-800 dark:text-white dark:focus:ring-primary-900/40"
         >
           {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
         </select>
@@ -90,7 +94,7 @@ export function GuidesPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as 'rating' | 'price_low' | 'price_high')}
-          className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:border-night-700 dark:bg-night-800 dark:text-white dark:focus:ring-primary-900/40"
         >
           <option value="rating">Highest Rated</option>
           <option value="price_low">Price: Low to High</option>

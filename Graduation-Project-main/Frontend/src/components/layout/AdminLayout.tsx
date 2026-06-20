@@ -41,7 +41,7 @@ export function AdminLayout() {
       <aside className="hidden lg:flex w-64 flex-col bg-slate-900 dark:bg-night-900 text-white shrink-0 border-r border-slate-800 dark:border-night-800">
         <div className="p-6 border-b border-slate-800 dark:border-night-800">
           <Link to="/admin" className="flex items-center gap-2.5">
-            <Logo size={34} />
+            <Logo />
             <span className="font-bold text-lg">Ather Admin</span>
           </Link>
         </div>
@@ -89,7 +89,7 @@ export function AdminLayout() {
         {/* Top bar (visible on every admin page) */}
         <header className="bg-slate-900 dark:bg-night-900 text-white px-4 py-3 flex items-center justify-between gap-3 border-b border-slate-800 dark:border-night-800">
           <div className="lg:hidden flex items-center gap-2">
-            <Logo size={26} />
+            <Logo />
             <span className="font-bold">Ather Admin</span>
           </div>
 

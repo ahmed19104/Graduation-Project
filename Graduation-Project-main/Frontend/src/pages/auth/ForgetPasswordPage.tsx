@@ -4,6 +4,7 @@ import { authApi } from '@/api/auth'
 import { useToast } from '@/context/ToastContext'
 import { Button, Input, Card } from '@/components/ui'
 import { getErrorMessage } from '@/api/axios'
+import { Logo } from '@/components/brand/Logo'
 
 export function ForgetPasswordPage() {
   const [step, setStep] = useState<'email' | 'reset'>('email')
@@ -68,9 +69,9 @@ export function ForgetPasswordPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md" padding="lg">
         <div className="text-center mb-6">
-          <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 text-white font-black text-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            A
-          </div>
+          <div className="flex items-center justify-center mb-4 ">
+                      <Logo />
+                    </div>
           <h1 className="text-2xl font-bold">Reset Password</h1>
           <p className="text-sm text-slate-500 mt-2">
             {step === 'email' 

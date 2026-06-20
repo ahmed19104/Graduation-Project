@@ -12,11 +12,11 @@ import {
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Button, GridSkeleton } from '@/components/ui'
-import { useAuth } from '@/context/AuthContext'
 import { placesApi } from '@/api/places'
 import { PlaceCard } from '@/components/shared/PlaceCard'
-import { getErrorMessage } from '@/api/axios'
+import { getErrorMessage, isUnauthorizedError } from '@/api/axios'
 import { useToast } from '@/context/ToastContext'
+import { StoryStrip } from '@/components/stories/StoryStrip'
 import type { Place } from '@/types'
 
 const HERO_VIDEO = '/assets/vid.mp4'
@@ -25,14 +25,14 @@ const HERO_POSTER =
 
 type Gov = { name: string; tagline: string; image: string }
 const GOVERNORATES: Gov[] = [
-  { name: 'Cairo',           tagline: 'City of a Thousand Minarets',    image: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?auto=format&fit=crop&w=600&q=75' },
-  { name: 'Giza',            tagline: 'Home of the Great Pyramids',      image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?auto=format&fit=crop&w=600&q=75' },
-  { name: 'Luxor',           tagline: "World's Greatest Open-Air Museum",image: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=600&q=75' },
-  { name: 'Aswan',           tagline: 'The Nubian Heart of Egypt',       image: 'https://images.unsplash.com/photo-1626100134240-0d8b6d3a5b8d?auto=format&fit=crop&w=600&q=75' },
-  { name: 'Alexandria',      tagline: 'Pearl of the Mediterranean',      image: 'https://images.unsplash.com/photo-1601469089893-7a3fcfd99c50?auto=format&fit=crop&w=600&q=75' },
-  { name: 'Hurghada',        tagline: 'Red Sea Coral Paradise',          image: 'https://images.unsplash.com/photo-1606046604972-77cc76aee944?auto=format&fit=crop&w=600&q=75' },
-  { name: 'Sharm El Sheikh', tagline: 'Gateway to the Sinai',            image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=75' },
-  { name: 'Dahab',           tagline: "Diver's Utopia",                  image: 'https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=600&q=75' },
+  { name: 'Cairo',          tagline: 'City of a Thousand Minarets',    image: '../assets/cairo.png' },
+  { name: 'Giza',           tagline: 'Home of the Great Pyramids',     image: '../assets/giza.png' },
+  { name: 'Luxor',          tagline: "World's Greatest Open-Air Museum",image: '../assets/luxor.png' },
+  { name: 'Aswan',          tagline: 'The Nubian Heart of Egypt',      image: '../assets/aswan.png' },
+  { name: 'Alexandria',     tagline: 'Pearl of the Mediterranean',     image: '../assets/alexandria.png' },
+  { name: 'Hurghada',       tagline: 'Red Sea Coral Paradise',         image: '../assets/hurghada.png' },
+  // { name: 'Sharm El Sheikh',tagline: 'Gateway to the Sinai',           image: '../assets/sharm-el-sheikh.png' },
+  // { name: 'Dahab',          tagline: "Diver's Utopia",                 image: '../assets/dahab.jpg' },
 ]
 
 const FEATURES = [
@@ -42,22 +42,16 @@ const FEATURES = [
   { icon: Star,     title: 'Honest Reviews',     desc: 'Authentic traveler feedback — so you always know exactly what to expect.' },
 ]
 
-const STATS = [
-  { v: '120+', l: 'Local Guides'   },
-  { v: '50+',  l: 'Heritage Sites' },
-  { v: '4.9★', l: 'Avg Rating'     },
-]
-
 export function LandingPage() {
-  const { isAuthenticated, hasRole } = useAuth()
-  const [places, setPlaces]           = useState<Place[]>([])
-  const [loading, setLoading]         = useState(true)
-  const { showToast }                  = useToast()
+  // const { isAuthenticated, hasRole } = useAuth()
+  const [places, setPlaces]          = useState<Place[]>([])
+  const [loading, setLoading]        = useState(true)
+  const { showToast }                = useToast()
 
   useEffect(() => {
     placesApi.getAll()
       .then(setPlaces)
-      .catch((e) => showToast(getErrorMessage(e), 'error'))
+      .catch(() => { /* silently fail on public pages — places API may require auth */ })
       .finally(() => setLoading(false))
   }, [showToast])
 
@@ -76,16 +70,17 @@ export function LandingPage() {
           │  HERO — contained card with visible left/right margins       │
           │  Video fills the CARD, NOT the full viewport.                │
           └──────────────────────────────────────────────────────────────┘ */}
-      <div className="w-full px-3 sm:px-5 lg:px-8 pt-4 sm:pt-6 pb-1">
+      <div className="w-full px-3 sm:px-5 lg:px-8 pt-4 sm:pt-5 pb-0">
         <div
           className="relative w-full overflow-hidden"
           style={{
-            borderRadius: '1.75rem',
-            minHeight: 'clamp(360px, 52vh, 560px)',
-            boxShadow: '0 24px 80px -16px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.06) inset',
+            borderRadius: '1.5rem',
+            /* تم التعديل هنا ليكون متناسق مع الموبايل والكمبيوتر */
+            height: 'clamp(320px, 45vw, 450px)',
+            boxShadow: '0 20px 60px -16px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06) inset',
           }}
         >
-          {/* Video — fills the CARD, not the screen */}
+          {/* Video */}
           <video
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay loop muted playsInline preload="metadata"
@@ -94,98 +89,88 @@ export function LandingPage() {
             <source src={HERO_VIDEO} type="video/mp4" />
           </video>
 
-          {/* Gradient — heavy on left (readable text), fades to transparent right (video shows) */}
+          {/* Light gradient — keeps video visible, text still readable */}
           <div
             className="absolute inset-0"
-            style={{ background: 'linear-gradient(105deg, rgba(6,9,20,0.92) 0%, rgba(6,9,20,0.62) 45%, rgba(6,9,20,0.12) 100%)' }}
+            style={{ background: 'linear-gradient(110deg, rgba(6,9,20,0.70) 0%, rgba(6,9,20,0.30) 45%, rgba(6,9,20,0.05) 100%)' }}
           />
 
-          {/* Pharaonic gold shimmer at card bottom */}
+          {/* Gold shimmer bottom */}
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] animate-gold-pulse"
             style={{ background: 'linear-gradient(90deg, transparent, #F59E0B 50%, transparent)' }}
           />
 
-          {/* ── Content ── */}
-          <div
-            className="relative z-10 flex flex-col justify-center px-7 py-10 sm:px-12 sm:py-12 lg:px-20 lg:py-14"
-            style={{ minHeight: 'clamp(360px, 52vh, 560px)' }}
-          >
-            <div className="max-w-[560px] animate-fade-in">
-
-              {/* Identity badge */}
+          {/* ── Minimal content ── */}
+          <div className="relative z-10 flex h-full flex-col justify-end px-6 py-5 sm:px-10 sm:py-7">
+            <div className="animate-fade-in">
+              {/* Badge */}
               <div
-                className="mb-5 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-bold uppercase backdrop-blur-sm"
+                className="mb-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase backdrop-blur-sm"
                 style={{
-                  letterSpacing: '0.18em',
+                  letterSpacing: '0.16em',
                   border: '1px solid rgba(245,158,11,0.35)',
                   background: 'rgba(245,158,11,0.12)',
                   color: '#FCD34D',
                 }}
               >
-                <span aria-hidden>🇪🇬</span> Premium Egyptian Tourism
+                <span aria-hidden>🇪🇬</span> Ather · Egyptian Tourism
               </div>
 
               {/* Headline */}
               <h1
                 className="font-black text-white"
-                style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', lineHeight: 1.03, letterSpacing: '-0.02em' }}
+                style={{ fontSize: 'clamp(1.6rem, 4.5vw, 3rem)', lineHeight: 1.08, letterSpacing: '-0.02em' }}
               >
-                Discover the<br />
-                Land of{' '}
+                Discover the Land of{' '}
                 <span className="text-gradient-gold">Pharaohs</span>
               </h1>
 
-              {/* Gold divider */}
-              <div className="my-5 flex items-center gap-3">
-                <div style={{ height: 1, width: 72, background: 'linear-gradient(90deg,#F59E0B,transparent)' }} />
-                <span className="select-none text-base" style={{ color: '#F59E0B' }} aria-hidden>𓂀</span>
-                <div style={{ height: 1, width: 36, background: 'linear-gradient(270deg,#F59E0B,transparent)' }} />
-              </div>
-
-              <p className="max-w-md text-base leading-relaxed sm:text-lg" style={{ color: 'rgba(255,255,255,0.80)' }}>
-                AI-powered itineraries, verified local guides, and unforgettable
-                experiences — from Cairo's pyramids to Aswan's Nile sunsets.
-              </p>
-
               {/* CTAs */}
-              <div className="mt-7 flex flex-wrap gap-3">
+              {/* <div className="mt-4 flex flex-wrap gap-2">
                 {isAuthenticated && hasRole('Tourist') ? (
                   <Link to="/plans/create">
-                    <Button size="lg" className="bg-gold-500 font-bold text-slate-900 shadow-lg shadow-gold-500/35 ring-2 ring-gold-400/30 hover:bg-gold-400">
-                      <Sparkles className="h-5 w-5" /> Plan with AI
+                    <Button size="sm" className="bg-gold-500 font-bold text-slate-900 shadow-lg shadow-gold-500/35 ring-2 ring-gold-400/30 hover:bg-gold-400">
+                      <Sparkles className="h-4 w-4" /> Plan with AI
                     </Button>
                   </Link>
                 ) : (
                   <Link to="/register">
-                    <Button size="lg" className="bg-gold-500 font-bold text-slate-900 shadow-lg shadow-gold-500/35 ring-2 ring-gold-400/30 hover:bg-gold-400">
-                      Start Your Journey <ArrowRight className="h-5 w-5" />
+                    <Button size="sm" className="bg-gold-500 font-bold text-slate-900 shadow-lg shadow-gold-500/35 ring-2 ring-gold-400/30 hover:bg-gold-400">
+                      Start Your Journey <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
                 )}
                 <Link to="/explore">
                   <Button
-                    size="lg" variant="outline"
+                    size="sm" variant="outline"
                     className="border-white/30 bg-white/5 text-white backdrop-blur-sm hover:border-white/60 hover:bg-white/15"
                   >
                     Explore Places
                   </Button>
                 </Link>
-              </div>
-
-              {/* Stats */}
-              <dl className="mt-9 grid grid-cols-3 gap-4" style={{ maxWidth: 340 }}>
-                {STATS.map((s) => (
-                  <div key={s.l}>
-                    <dt className="font-black" style={{ fontSize: 'clamp(1.5rem,3vw,2rem)', color: '#F59E0B' }}>{s.v}</dt>
-                    <dd className="mt-0.5 text-[10px] font-semibold uppercase" style={{ letterSpacing: '0.16em', color: 'rgba(255,255,255,0.52)' }}>{s.l}</dd>
-                  </div>
-                ))}
-              </dl>
+              </div> */}
             </div>
           </div>
         </div>
       </div>
+
+      {/* ── STORIES STRIP ─────────────────────────────────────────── */}
+      <section className="container-app pt-2 pb-0">
+        <div className="mb-3 flex items-end justify-between gap-4">
+          <div>
+            
+            <h2 className="mt-1 text-xl font-bold">Travel Stories</h2>
+            <div className="gold-rule mt-2 w-12" />
+          </div>
+          <Link to="/stories" className="hidden sm:block">
+            <Button variant="ghost" size="sm" className="gap-1.5 text-sm">
+              See all <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+        <StoryStrip />
+      </section>
 
       {/* ── TOP RATED ─────────────────────────────────────────────────────── */}
       <section className="container-app section-py">
@@ -201,9 +186,9 @@ export function LandingPage() {
         </div>
 
         {loading ? (
-          <GridSkeleton count={4} />
+          <GridSkeleton count={6} />
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {picks.map((p) => <PlaceCard key={p.id} place={p} />)}
           </div>
         )}
@@ -212,21 +197,22 @@ export function LandingPage() {
       {/* ── GOVERNORATES ──────────────────────────────────────────────────── */}
       <section className="bg-sand-50/70 section-py dark:bg-night-900/50">
         <div className="container-app">
-          <div className="mb-8 text-center">
+          <div className="mb-6 text-center">
             <p className="section-label text-primary-600 dark:text-primary-400">Across the Nation</p>
             <h2 className="mt-1">Explore by Governorate</h2>
             <div className="gold-rule mx-auto mt-2 w-16" />
-            <p className="mx-auto mt-3 max-w-lg text-muted">
+            {/* <p className="mx-auto mt-3 max-w-lg text-muted">
               From the Pyramids of Giza to the temples of Luxor — every Egyptian city holds a different wonder.
-            </p>
+            </p> */}
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {/* Mobile: horizontal scroll · Desktop: grid */}
+          <div className="scrollbar-hide -mx-4 flex gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
             {GOVERNORATES.map((g) => (
               <Link
                 key={g.name}
                 to={`/explore?governorate=${encodeURIComponent(g.name)}`}
-                className="card-lift group relative overflow-hidden rounded-2xl ring-1 ring-sand-200 dark:ring-night-700 hover:ring-gold-400/50"
+                className="w-[160px] shrink-0 sm:w-auto card-lift group relative overflow-hidden rounded-2xl ring-1 ring-sand-200 dark:ring-night-700 hover:ring-gold-400/50"
                 style={{ '--hover-shadow': '0 12px 40px -12px rgba(245,158,11,0.22)' } as React.CSSProperties}
               >
                 <div className="aspect-[4/5]">
@@ -277,7 +263,7 @@ export function LandingPage() {
       </section>
 
       {/* ── GUIDE CTA ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-20 text-white" style={{ background: 'var(--color-primary-950)' }}>
+      <section className="relative overflow-hidden py-14 text-white" style={{ background: 'var(--color-primary-950)' }}>
         <div
           aria-hidden className="pointer-events-none absolute inset-0"
           style={{ background: 'radial-gradient(ellipse at 78% 50%,rgba(14,165,233,.22) 0%,transparent 58%),radial-gradient(ellipse at 16% 85%,rgba(245,158,11,.14) 0%,transparent 52%)' }}

@@ -24,7 +24,7 @@ namespace BLL.Service.Implementation
 
             var plan = new AiPlan(dto.Name, dto.Description, dto.CountDay, dto.Budget, dto.Type, userId);
 
-            var aiResult = await _aiService.GetPlanFromPythonApi(dto.CountDay, dto.Budget, dto.Type);
+            var aiResult = await _aiService.GetPlanFromPythonApi(dto.CountDay, dto.Budget, dto.Type,dto.Governorate);
             plan.SetAiResponse(aiResult);
 
             await _unitOfWork.AiPlans.AddAsync(plan);

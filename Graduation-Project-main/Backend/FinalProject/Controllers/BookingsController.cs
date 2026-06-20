@@ -132,7 +132,7 @@ namespace FinalProject.Controllers
 
         // Itinerary accessible to either booking participant (tourist or guide).
         [Authorize(Roles = "Tourist,Guide")]
-        [HttpGet("{id}/itinerary")]
+        [HttpGet("{id}/MyBookingDetails")]
         public async Task<IActionResult> GetItinerary(Guid id)
         {
             if (!User.TryGetUserId(out var userId))
@@ -140,7 +140,7 @@ namespace FinalProject.Controllers
 
             try
             {
-                var data = await _bookingService.GetBookingItineraryAsync(id, userId);
+                var data = await _bookingService.GetBookingPlanDetailsAsync(id, userId);
                 return Ok(new { IsSuccess = true, Data = data });
             }
             catch (KeyNotFoundException ex)

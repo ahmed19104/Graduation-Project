@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-  Edit2,
   Images,
   MapPin,
   Pencil,
@@ -13,7 +12,7 @@ import {
   X,
 } from 'lucide-react'
 import { placesApi } from '@/api/places'
-import { Avatar, Button, Input, ListSkeleton, useToast } from '@/components/ui'
+import { Button, Input, ListSkeleton, useToast } from '@/components/ui'
 import { getErrorMessage } from '@/api/axios'
 import { absoluteMediaUrl } from '@/utils/media'
 import { formatCurrency } from '@/utils/format'

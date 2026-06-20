@@ -40,5 +40,5 @@ export const bookingsApi = {
       startDate?: string | null
       manualPlanItems: { dayNumber: number; placeName: string; imageUrl?: string | null; placeId?: string | null }[]
       aiResponseJson?: string | null
-    }>(`/Bookings/${bookingId}/itinerary`).then((r) => r.data),
+    }>(`/Bookings/${bookingId}/MyBookingDetails`).then((r) => r.data),
 }

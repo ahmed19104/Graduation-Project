@@ -19,10 +19,11 @@ namespace BLL.ModelVm.AiPlane
         public int CountDay { get; set; }
 
         [Required]
-        public decimal Budget { get; set; }
+        public int Budget { get; set; }
 
         [Required]
         public string Type { get; set; } // تاريخي، ترفيهي، إلخ
+        public string Governorate { get; set; } // المحافظة
     }
 }
 

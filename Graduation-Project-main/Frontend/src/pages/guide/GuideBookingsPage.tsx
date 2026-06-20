@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Calendar, Check, X, MessageCircle, CheckCircle } from 'lucide-react'
 import { bookingsApi } from '@/api/bookings'
-import { Avatar, Badge, Button, Card, EmptyState, ListSkeleton, Tabs, useToast } from '@/components/ui'
+import { Avatar, Badge, Button, Card, ConfirmDialog, EmptyState, ListSkeleton, Tabs, useToast } from '@/components/ui'
 import { getErrorMessage } from '@/api/axios'
 import { formatCurrency, formatDateTime } from '@/utils/format'
 import { Link } from 'react-router-dom'
@@ -29,6 +29,8 @@ export function GuideBookingsPage() {
   const [historyBookings, setHistoryBookings] = useState<GuideBooking[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [rejectTarget, setRejectTarget] = useState<string | null>(null)
+  const [completeTarget, setCompleteTarget] = useState<string | null>(null)
   const { showToast } = useToast()
   const { lastBookingRequested, lastBookingStateChanged, refreshPendingBookings } = useNotifications()
 
@@ -72,11 +74,15 @@ export function GuideBookingsPage() {
     }
   }
 
-  const handleReject = async (bookingId: string) => {
-    if (!confirm('Are you sure you want to reject this booking?')) return
-    setActionLoading(bookingId)
+  const handleReject = (bookingId: string) => setRejectTarget(bookingId)
+
+  const handleConfirmReject = async () => {
+    if (!rejectTarget) return
+    const id = rejectTarget
+    setRejectTarget(null)
+    setActionLoading(id)
     try {
-      await bookingsApi.rejectBooking(bookingId)
+      await bookingsApi.rejectBooking(id)
       showToast('Booking rejected', 'success')
       await loadBookings()
       await refreshPendingBookings()
@@ -87,11 +93,15 @@ export function GuideBookingsPage() {
     }
   }
 
-  const handleComplete = async (bookingId: string) => {
-    if (!confirm('Mark this tour as completed? This will charge the commission.')) return
-    setActionLoading(bookingId)
+  const handleComplete = (bookingId: string) => setCompleteTarget(bookingId)
+
+  const handleConfirmComplete = async () => {
+    if (!completeTarget) return
+    const id = completeTarget
+    setCompleteTarget(null)
+    setActionLoading(id)
     try {
-      await bookingsApi.completeBooking(bookingId)
+      await bookingsApi.completeBooking(id)
       showToast('Tour marked as completed!', 'success')
       await loadBookings()
     } catch (err) {
@@ -105,6 +115,7 @@ export function GuideBookingsPage() {
   const pendingCount = pendingBookings.length
 
   return (
+    <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6 text-[var(--text-primary)]">Manage Bookings</h1>
 
@@ -204,7 +215,7 @@ export function GuideBookingsPage() {
               )}
 
               <div className="flex justify-end mt-3">
-                <Link to={`/bookings/${booking.bookingId}`}>
+                <Link to={`/guide/bookings/${booking.bookingId}`}>
                   <Button size="sm" variant="ghost">View Details →</Button>
                 </Link>
               </div>
@@ -213,5 +224,24 @@ export function GuideBookingsPage() {
         </div>
       )}
     </div>
+
+      <ConfirmDialog
+        isOpen={rejectTarget !== null}
+        title="Reject Booking"
+        message="Are you sure you want to reject this booking? This action cannot be undone."
+        confirmLabel="Reject"
+        danger
+        onConfirm={handleConfirmReject}
+        onCancel={() => setRejectTarget(null)}
+      />
+      <ConfirmDialog
+        isOpen={completeTarget !== null}
+        title="Complete Tour"
+        message="Mark this tour as completed? Commission will be charged upon confirmation."
+        confirmLabel="Complete"
+        onConfirm={handleConfirmComplete}
+        onCancel={() => setCompleteTarget(null)}
+      />
+    </>
   )
 }

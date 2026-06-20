@@ -114,12 +114,12 @@ export function PlaceDetailPage() {
   const hero          = absoluteMediaUrl(place.mainImageUrl) || 'https://placehold.co/1200x400?text=No+Image'
   const hasRating     = typeof place.averageRate === 'number' && place.averageRate > 0
   const hasCoords     = Number.isFinite(place.lat) && Number.isFinite(place.lng) && (place.lat !== 0 || place.lng !== 0)
-  const delta         = 0.01
-  const mapSrc        = hasCoords
-    ? `https://www.openstreetmap.org/export/embed.html?bbox=${place.lng - delta}%2C${place.lat - delta}%2C${place.lng + delta}%2C${place.lat + delta}&layer=mapnik&marker=${place.lat}%2C${place.lng}`
+// استخدام Google Maps بدلاً من OpenStreetMap لتفادي مشاكل الـ WebGL
+  const mapSrc = hasCoords
+    ? `https://maps.google.com/maps?q=${place.lat},${place.lng}&z=15&output=embed`
     : ''
-  const mapHref       = hasCoords
-    ? `https://www.openstreetmap.org/?mlat=${place.lat}&mlon=${place.lng}#map=15/${place.lat}/${place.lng}`
+  const mapHref = hasCoords
+    ? `https://maps.google.com/maps?q=${place.lat},${place.lng}`
     : ''
 
   return (

@@ -19,7 +19,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       className={cn(
         'relative inline-flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-transparent',
         'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
-        'dark:text-slate-300 dark:hover:bg-night-800 dark:hover:text-white',
+        'dark:text-slate-100 dark:hover:bg-night-800 dark:hover:text-white',
         'transition-colors',
         className
       )}

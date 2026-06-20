@@ -48,18 +48,18 @@
   --color-sand-800: #523914;
   --color-sand-900: #3a2a14;
 
-  /* Nile-night — deep navy used only in dark mode surfaces */
-  --color-night-50:  #f1f6fb;
-  --color-night-100: #dbe7f3;
-  --color-night-200: #b3cae3;
-  --color-night-300: #7ea1c8;
-  --color-night-400: #4a76a8;
-  --color-night-500: #2f5681;
-  --color-night-600: #1f3f63;
-  --color-night-700: #182f4a;
-  --color-night-800: #112138;
-  --color-night-900: #0b1626;
-  --color-night-950: #060e1a;
+  /* Nile-night — deep charcoal used in dark mode surfaces */
+  --color-night-50:  #f2f4f6;
+  --color-night-100: #e0e3e8;
+  --color-night-200: #b9bec6;
+  --color-night-300: #878d99;
+  --color-night-400: #525860;
+  --color-night-500: #3e4349;
+  --color-night-600: #31353d;
+  --color-night-700: #272b33;
+  --color-night-800: #22262d;
+  --color-night-900: #1b1e23;
+  --color-night-950: #131619;
 
   /* Status colors (kept neutral & semantic — never used as brand) */
   --color-success-500: #10b981;
@@ -149,26 +149,28 @@
     --gradient-gold:   linear-gradient(135deg, var(--color-gold-400), var(--color-gold-600));
   }
 
-  /* Dark mode — premium navy + soft gold glow */
+  /* Dark mode — Deeper charcoal base #0D0F12 */
   .dark {
     color-scheme: dark;
 
-    --bg-canvas:         #0b1626;   /* deep Nile-night */
-    --bg-surface:        #111e34;   /* card surface */
-    --bg-surface-2:      #16263f;   /* sandstone-equivalent on dark */
-    --bg-surface-raised: #1a2c47;   /* modals */
-    --bg-muted:          #182e4a;
+    /* Darkened Surfaces */
+    --bg-canvas:         #0d0f12;   /* main page background, darker charcoal */
+    --bg-surface:        #15181d;   /* cards, navbar */
+    --bg-surface-2:      #111317;   /* secondary surface */
+    --bg-surface-raised: #1b1e23;   /* modals, popovers */
+    --bg-muted:          #13161a;   /* skeletons, inactive chips */
 
-    --text-primary:    #e5eaf2;
-    --text-secondary:  #93a5bd;
-    --text-muted:      #64748b;
-    --text-inverse:    #0b1626;
+    --text-primary:    #ffffff;
+    --text-secondary:  #d4d8de;
+    --text-muted:      #9ca2aa;
+    --text-inverse:    #0d0f12;     /* Adjusted to match new darker canvas */
     --text-on-primary: #ffffff;
-    --text-on-accent:  #1a1305;     /* dark text on gold accent stays readable */
+    --text-on-accent:  #1a1305;
 
-    --border-subtle:  #1b2840;
-    --border-default: #243454;
-    --border-strong:  #34466a;
+    /* Darkened Borders */
+    --border-subtle:  #1d2127;
+    --border-default: #262b33;
+    --border-strong:  #333a45;
 
     /* Brand brightens in dark for AA contrast */
     --brand:            var(--color-primary-400);
@@ -188,9 +190,10 @@
     --warning: var(--color-warning-500);
     --danger:  var(--color-danger-500);
 
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.35);
-    --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.45), 0 2px 4px -2px rgb(0 0 0 / 0.30);
-    --shadow-lg: 0 20px 40px -16px rgb(0 0 0 / 0.65), 0 8px 16px -8px rgb(0 0 0 / 0.40);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.45);
+    --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.55), 0 2px 4px -2px rgb(0 0 0 / 0.40);
+    --shadow-lg: 0 20px 40px -16px rgb(0 0 0 / 0.75), 0 8px 16px -8px rgb(0 0 0 / 0.50);
+    
     /* Soft glowing highlights on dark — the "luxury" effect */
     --shadow-glow-primary: 0 0 0 1px rgb(56 189 248 / 0.28), 0 16px 40px -12px rgb(56 189 248 / 0.40);
     --shadow-glow-gold:    0 0 0 1px rgb(250 204 21 / 0.30), 0 16px 40px -12px rgb(250 204 21 / 0.30);
@@ -198,7 +201,7 @@
     --gradient-hero:
       radial-gradient(ellipse at 75% 0%, rgb(56 189 248 / 0.20), transparent 60%),
       radial-gradient(ellipse at 15% 110%, rgb(250 204 21 / 0.12), transparent 55%),
-      linear-gradient(180deg, var(--color-night-900), var(--color-night-950));
+      linear-gradient(180deg, var(--color-night-950), #0d0f12);
   }
 
   html {
@@ -256,7 +259,7 @@
 @layer utilities {
   /* Layout */
   .container-app { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
-  .section-py    { @apply py-12 sm:py-16 lg:py-24; }
+  .section-py    { @apply py-8 sm:py-10 lg:py-14; }
 
   /* Adaptive surfaces — the most important class in the system */
   .surface {
@@ -316,21 +319,15 @@
     background: linear-gradient(90deg, transparent, var(--border-default), transparent);
   }
 
-  /* Instagram-style story rings */
+  /* Story rings */
   .story-ring {
-    background: conic-gradient(
-      from 200deg,
-      var(--color-primary-500),
-      var(--color-gold-400),
-      var(--color-primary-700),
-      var(--color-primary-500)
-    );
-    padding: 2px;
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 40%, #dc2626 70%, #991b1b 100%);
+    padding: 3px;
     border-radius: 9999px;
   }
   .story-ring--viewed {
     background: var(--border-strong);
-    padding: 2px;
+    padding: 3px;
     border-radius: 9999px;
   }
 
@@ -408,4 +405,27 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /* ── Dark mode safety net ──
+     Catches hardcoded Tailwind slate/gray classes that don't have dark: variants.
+     Applied last so they override component-level slate utilities. */
+  .dark .text-slate-900,
+  .dark .text-slate-800 { color: #ffffff; }
+  .dark .text-slate-700 { color: var(--text-primary); }
+  .dark .text-slate-600 { color: var(--text-secondary); }
+  .dark .text-slate-500 { color: var(--text-secondary); }
+  .dark .text-slate-400 { color: var(--text-muted); }
+  .dark .text-slate-300 { color: var(--text-muted); }
+
+  .dark .bg-white        { background-color: var(--bg-surface); }
+  .dark .bg-slate-50     { background-color: var(--bg-surface-2); }
+  .dark .bg-slate-100    { background-color: var(--bg-muted); }
+  .dark .bg-slate-200    { background-color: var(--bg-muted); }
+  .dark .bg-primary-50   { background-color: var(--brand-soft); }
+  .dark .bg-primary-100  { background-color: var(--brand-soft); }
+  .dark .border-slate-100,
+  .dark .border-slate-200 { border-color: var(--border-subtle); }
+  .dark .border-slate-300 { border-color: var(--border-default); }
+  .dark .border-primary-100,
+  .dark .border-primary-200 { border-color: var(--brand-ring); }
 }

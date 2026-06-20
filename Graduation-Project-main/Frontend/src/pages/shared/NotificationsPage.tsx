@@ -44,7 +44,7 @@ export function NotificationsPage() {
       showToast(`${notification.title}: ${notification.message}`, 'info')
     }
 
-    signalRService.connectNotifications(handleNewNotification).catch(console.error)
+    signalRService.connectNotifications({ onNotification: handleNewNotification }).catch(console.error)
 
     return () => {
       signalRService.disconnectNotifications()

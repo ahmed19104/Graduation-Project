@@ -79,9 +79,9 @@ export function Navbar() {
           {/* ── Brand ── */}
           <Link to="/" className="flex shrink-0 items-center gap-2.5 outline-none">
             <Logo />
-            <span className="hidden text-xl font-black tracking-tight text-[var(--text-primary)] sm:block">
+            {/* <span className="hidden text-xl font-black tracking-tight text-[var(--text-primary)] sm:block">
               Ather
-            </span>
+            </span> */}
           </Link>
 
           {/* ── Desktop nav ── */}

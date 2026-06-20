@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { Button, Input, Card } from '@/components/ui'
 import { getErrorMessage } from '@/api/axios'
+import { Logo } from '@/components/brand/Logo'
 
 export function LoginPage() {
   const [email, setEmail] = useState('')
@@ -45,11 +46,12 @@ export function LoginPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md" padding="lg">
         <div className="text-center mb-8">
-          <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 text-white font-black text-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            A
+          <div className="flex items-center justify-center mb-4 ">
+            <Logo />
           </div>
+          
           <h1 className="text-2xl font-bold">Welcome Back</h1>
-          <p className="text-slate-500 mt-1 text-sm">Sign in to your Ather account</p>
+          <p className="text-slate-500 dark:text-slate-300 mt-1 text-sm">Sign in to your Ather account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -72,7 +74,7 @@ export function LoginPage() {
             />
             <button
               type="button"
-              className="absolute right-3 top-[38px] text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute right-3 top-[38px] text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-white transition-colors"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -91,7 +93,7 @@ export function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-500 mt-6">
+        <p className="text-center text-sm text-slate-500 dark:text-slate-300 mt-6">
           Don't have an account?{' '}
           <Link to="/register" className="text-primary-600 font-semibold hover:underline">
             Create Account

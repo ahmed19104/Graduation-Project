@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Calendar, MapPin, MessageCircle, Star, X } from 'lucide-react'
+import { Calendar, MapPin, MessageCircle, Star, X, Sparkles } from 'lucide-react'
 import { bookingsApi } from '@/api/bookings'
 import { reviewsApi } from '@/api/reviews'
 import {
@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   CardSkeleton,
+  ConfirmDialog,
   Modal,
   StarRating,
   Textarea,
@@ -50,11 +51,13 @@ export function BookingDetailPage() {
   const [booking, setBooking] = useState<BookingDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isCancelling, setIsCancelling] = useState(false)
+  const [confirmCancel, setConfirmCancel] = useState(false)
   const [reviewOpen, setReviewOpen] = useState(false)
   const [reviewRate, setReviewRate] = useState(5)
   const [reviewComment, setReviewComment] = useState('')
   const [submittingReview, setSubmittingReview] = useState(false)
   const [itinerary, setItinerary] = useState<Awaited<ReturnType<typeof bookingsApi.getItinerary>> | null>(null)
+  
   const { hasRole } = useAuth()
   const { showToast } = useToast()
 
@@ -80,13 +83,19 @@ export function BookingDetailPage() {
     refreshBooking()
       .catch((err) => showToast(getErrorMessage(err), 'error'))
       .finally(() => setIsLoading(false))
-    // Itinerary is independent — failure is non-fatal.
+    
     bookingsApi.getItinerary(id).then(setItinerary).catch(() => setItinerary(null))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
-  const handleCancel = async () => {
-    if (!id || !confirm('Are you sure you want to cancel this booking?')) return
+  const handleCancel = () => {
+    if (!id) return
+    setConfirmCancel(true)
+  }
+
+  const handleConfirmCancel = async () => {
+    if (!id) return
+    setConfirmCancel(false)
     setIsCancelling(true)
     try {
       await bookingsApi.cancelBooking(id)
@@ -135,8 +144,7 @@ export function BookingDetailPage() {
   }
 
   const isTourist = hasRole('Tourist')
-  const status =
-    'state' in booking ? booking.state : 'bookingState' in booking ? booking.bookingState : 'Pending'
+  const status = 'state' in booking ? booking.state : 'bookingState' in booking ? booking.bookingState : 'Pending'
   const counterpartName = isTourist
     ? ('guideName' in booking ? booking.guideName : 'Guide')
     : ('touristName' in booking ? booking.touristName : 'Traveler')
@@ -144,13 +152,12 @@ export function BookingDetailPage() {
     ? ('guideProfileImage' in booking ? booking.guideProfileImage : undefined)
     : ('touristProfileUrl' in booking ? booking.touristProfileUrl : undefined)
   const planName = ('planName' in booking ? booking.planName : 'Travel Plan') || 'Travel Plan'
-  const totalPrice =
-    ('totalCost' in booking ? booking.totalCost : 'totalPrice' in booking ? booking.totalPrice : 0) ?? 0
-  const createdAt =
-    'bookingDate' in booking ? booking.bookingDate : 'createdAt' in booking ? booking.createdAt : undefined
+  const totalPrice = ('totalCost' in booking ? booking.totalCost : 'totalPrice' in booking ? booking.totalPrice : 0) ?? 0
+  const createdAt = 'bookingDate' in booking ? booking.bookingDate : 'createdAt' in booking ? booking.createdAt : undefined
 
   return (
     <div className="container-app max-w-lg py-8">
+      {/* BOOKING INFO CARD */}
       <Card padding="lg" className="animate-fade-in">
         <div className="mb-4 flex items-center justify-between">
           <Badge className={cn(getStatusColor(status))}>{getStatusLabel(status)}</Badge>
@@ -214,19 +221,23 @@ export function BookingDetailPage() {
         </div>
       </Card>
 
-      {itinerary && itinerary.manualPlanItems.length > 0 && (
+      {/* ITINERARY CARD (Works for both AI and Manual now!) */}
+      {itinerary && itinerary.manualPlanItems && itinerary.manualPlanItems.length > 0 && (
         <Card padding="lg" className="mt-6">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold">{itinerary.planName || 'Itinerary'}</h3>
-              <p className="text-xs text-muted">
-                {itinerary.planType === 'AI' ? 'AI-generated plan' : 'Manual plan'}
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                {itinerary.planName || 'Itinerary'}
+                {itinerary.planType === 'AI' && <Sparkles className="h-4 w-4 text-amber-500" />}
+              </h3>
+              <p className="text-xs text-muted mt-1">
+                {itinerary.planType === 'AI' ? 'AI-generated travel plan' : 'Custom manual plan'}
                 {itinerary.totalDays > 0 ? ` · ${itinerary.totalDays} days` : ''}
               </p>
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="mt-6 space-y-4">
             {Object.entries(
               itinerary.manualPlanItems.reduce<Record<number, typeof itinerary.manualPlanItems>>(
                 (acc, it) => {
@@ -239,14 +250,14 @@ export function BookingDetailPage() {
               .map(([d, items]) => [Number(d), items] as const)
               .sort(([a], [b]) => a - b)
               .map(([day, items]) => (
-                <div key={day}>
+                <div key={`day-${day}`}>
                   <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-primary-300">
                     Day {day}
                   </h4>
                   <div className="space-y-2">
                     {items.map((it, idx) => {
                       const inner = (
-                        <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 dark:bg-night-800">
+                        <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 hover:bg-slate-100 transition-colors dark:bg-night-800 dark:hover:bg-night-700">
                           <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-slate-200 dark:bg-night-700">
                             <img
                               src={absoluteMediaUrl(it.imageUrl ?? undefined) || 'https://placehold.co/120x120?text=•'}
@@ -264,9 +275,9 @@ export function BookingDetailPage() {
                         </div>
                       )
                       return it.placeId ? (
-                        <Link key={`${day}-${idx}`} to={`/explore/${it.placeId}`}>{inner}</Link>
+                        <Link key={`item-${day}-${idx}`} to={`/explore/${it.placeId}`}>{inner}</Link>
                       ) : (
-                        <div key={`${day}-${idx}`}>{inner}</div>
+                        <div key={`item-${day}-${idx}`}>{inner}</div>
                       )
                     })}
                   </div>
@@ -276,6 +287,7 @@ export function BookingDetailPage() {
         </Card>
       )}
 
+      {/* REVIEW MODAL */}
       <Modal
         isOpen={reviewOpen}
         onClose={() => setReviewOpen(false)}
@@ -305,6 +317,16 @@ export function BookingDetailPage() {
           </div>
         </div>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={confirmCancel}
+        title="Cancel Booking"
+        message="Are you sure you want to cancel this booking? This action cannot be undone."
+        confirmLabel="Cancel Booking"
+        danger
+        onConfirm={handleConfirmCancel}
+        onCancel={() => setConfirmCancel(false)}
+      />
     </div>
   )
 }

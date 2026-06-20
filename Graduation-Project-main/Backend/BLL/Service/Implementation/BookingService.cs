@@ -1,4 +1,6 @@
+using System.Text.Json;
 using BLL.Hubs;
+using BLL.ModelVm.AiPlane;
 using BLL.ModelVm.Booking;
 using BLL.ModelVm.GuideVm;
 using BLL.Service.Abstraction;
@@ -184,7 +186,38 @@ namespace BLL.Service.Implementation
                 result.PlanName = aiPlan.Name;
                 result.PlanType = "AI";
                 result.TotalDays = aiPlan.CountDay;
-                result.AiResponseJson = aiPlan.AiResponseJson;
+
+                // 1. فك الـ JSON اللي راجع من الـ AI
+                if (!string.IsNullOrEmpty(aiPlan.AiResponseJson))
+                {
+                    // افترضنا إنك هتعمل Class صغير فوق يمثل الـ Item اللي راجع من الـ AI
+                    var aiItems = JsonSerializer.Deserialize<List<AiPlanJsonItem>>(aiPlan.AiResponseJson);
+
+                    if (aiItems != null && aiItems.Any())
+                    {
+                        // 2. هات الـ IDs بتاعت الأماكن اللي راجعة من الموديل
+                        var placeIdsFromModel = aiItems.Select(i => i.place_id).ToHashSet();
+
+                        // 3. هات الأماكن دي من الداتا بيز بناءً على الـ IdFromModel
+                        // (تأكد إن اسم البروبرتي عندك في الـ Entity هو IdFromModel أو حسب ما أنت مسميه)
+                        var matchedPlaces = await _unitOfWork.Places.FindAsync(p => placeIdsFromModel.Contains(p.IdFromModel));
+                        var placeLookup = matchedPlaces.ToDictionary(p => p.IdFromModel);
+
+                        // 4. عبي الـ Items في نفس الـ List اللي الفرونت إند متعود عليها
+                        foreach (var item in aiItems)
+                        {
+                            placeLookup.TryGetValue(item.place_id, out var place);
+                            result.ManualPlanItems.Add(new DailyPlanItemDto
+                            {
+                                DayNumber = item.day,
+                                PlaceName = place?.Name ?? "Unknown place",
+                                // يفضل كمان تبعت الـ PlaceId العادي والـ ImageUrl لو موجودين في الـ DTO
+                                PlaceId = place?.Id,
+                                ImageUrl = place?.MainImageUrl
+                            });
+                        }
+                    }
+                }
             }
             else if (booking.ManualPlanId.HasValue)
             {
@@ -208,7 +241,10 @@ namespace BLL.Service.Implementation
                     result.ManualPlanItems.Add(new DailyPlanItemDto
                     {
                         DayNumber = item.DayNumber,
-                        PlaceName = place?.Name ?? "Unknown place"
+                        PlaceName = place?.Name ?? "Unknown place",
+                        PlaceId = place?.Id,
+                        ImageUrl = place?.MainImageUrl
+                        // يفضل تبعت الـ Id والصورة هنا كمان
                     });
                 }
             }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\FinalProject.csproj": {}
+    "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\FinalProject\\FinalProject.csproj": {}
   },
   "projects": {
-    "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\BLL.csproj": {
+    "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\BLL\\BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\BLL.csproj",
+        "projectUniqueName": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\BLL\\BLL.csproj",
         "projectName": "BLL",
-        "projectPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\BLL.csproj",
+        "projectPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\BLL\\BLL.csproj",
         "packagesPath": "C:\\Users\\Compu City\\.nuget\\packages\\",
-        "outputPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\obj\\",
+        "outputPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\BLL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -32,8 +32,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj": {
-                "projectPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj"
+              "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj": {
+                "projectPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj"
               }
             }
           }
@@ -109,14 +109,14 @@
         }
       }
     },
-    "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj": {
+    "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj",
+        "projectUniqueName": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj",
+        "projectPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj",
         "packagesPath": "C:\\Users\\Compu City\\.nuget\\packages\\",
-        "outputPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\obj\\",
+        "outputPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -210,14 +210,14 @@
         }
       }
     },
-    "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\FinalProject.csproj": {
+    "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\FinalProject\\FinalProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\FinalProject.csproj",
+        "projectUniqueName": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\FinalProject\\FinalProject.csproj",
         "projectName": "FinalProject",
-        "projectPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\FinalProject.csproj",
+        "projectPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\FinalProject\\FinalProject.csproj",
         "packagesPath": "C:\\Users\\Compu City\\.nuget\\packages\\",
-        "outputPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\obj\\",
+        "outputPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\FinalProject\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -238,11 +238,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\BLL.csproj": {
-                "projectPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\BLL.csproj"
+              "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\BLL\\BLL.csproj": {
+                "projectPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\BLL\\BLL.csproj"
               },
-              "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj": {
-                "projectPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj"
+              "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj": {
+                "projectPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj"
               }
             }
           }
