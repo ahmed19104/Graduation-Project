@@ -4599,11 +4599,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj",
+      "projectUniqueName": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj",
       "projectName": "DAL",
-      "projectPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\DAL.csproj",
+      "projectPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\DAL.csproj",
       "packagesPath": "C:\\Users\\Compu City\\.nuget\\packages\\",
-      "outputPath": "E:\\Ather-Project-main\\Ather-Project-main\\Backend\\DAL\\obj\\",
+      "outputPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

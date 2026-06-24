@@ -22,6 +22,7 @@ interface TouristFormData {
   userName: string
   email: string
   password: string
+  confirmPassword: string
   age: number
   country: string
   gender: number
@@ -52,6 +53,7 @@ export function RegisterPage() {
     userName: '',
     email: '',
     password: '',
+    confirmPassword: '',
     age: 25,
     country: 'Egypt',
     gender: 1,
@@ -90,13 +92,19 @@ export function RegisterPage() {
       showToast('Password must be at least 8 characters', 'error')
       return
     }
-    
+
+    if (touristForm.password !== touristForm.confirmPassword) {
+      showToast('Passwords do not match', 'error')
+      return
+    }
+
     setIsLoading(true)
     try {
       const formData = new FormData()
       formData.append('UserName', touristForm.userName)
       formData.append('Email', touristForm.email)
       formData.append('Password', touristForm.password)
+      formData.append('ConfirmPassword', touristForm.confirmPassword)
       formData.append('Age', touristForm.age.toString())
       formData.append('Gender', touristForm.gender.toString())
       formData.append('Country', touristForm.country)
@@ -254,7 +262,16 @@ export function RegisterPage() {
               placeholder="At least 8 characters"
               hint="Must be at least 8 characters"
             />
-            
+
+            <Input
+              label="Confirm Password *"
+              type="password"
+              value={touristForm.confirmPassword}
+              onChange={(e) => setTouristForm({ ...touristForm, confirmPassword: e.target.value })}
+              required
+              placeholder="Re-enter your password"
+            />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
                 label="Age *"

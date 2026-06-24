@@ -12,7 +12,7 @@ namespace DAL.Entity
         public bool IsCustom { get; private set; } // يدوي ولا API؟
         public string? ExternalApiId { get; private set; }
 
-
+        public int? SortOrder { get; private set; }
 
         [Required, StringLength(200)]
         public string Name { get; private set; }

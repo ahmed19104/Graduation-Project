@@ -182,6 +182,7 @@ export interface CreateAiPlanRequest {
   countDay: number
   budget: number
   type: string
+  governorate: string
 }
 
 export interface CreateManualPlanRequest {

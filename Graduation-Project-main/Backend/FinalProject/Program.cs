@@ -26,6 +26,7 @@ namespace FinalProject
             builder.Services.AddScoped<IEmailService, BLL.Service.Implementation.EmailService>();
             builder.Services.AddScoped<IExternalPlaceApiService, BLL.Service.Implementation.MockExternalPlaceApiService>();
             builder.Services.AddScoped<IAppNotificationService, BLL.Service.Implementation.AppNotificationService>();
+            builder.Services.AddScoped<IAiIntegrationModelChat, BLL.Service.Implementation.AiIntegrationModelChat>();
             // تسجيل الـ Background Service
             builder.Services.AddHostedService<BookingUpdateWorker>();
             // تسجيل خدمة متابعة المديونيات في الخلفية

@@ -1,4 +1,4 @@
-using BLL.ModelVm.Places;
+﻿using BLL.ModelVm.Places;
 using DAL.Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,8 @@ namespace BLL.Service.Implementation
                 p => p.Include(x => x.Reviews)
             );
 
-            return places.Select(p => new PlaceDisplayDto
+            // ✅ التعديل هنا: ضفنا OrderBy للترتيب التصاعدي بناءً على SortOrder
+            return places.OrderBy(p => p.SortOrder).Select(p => new PlaceDisplayDto
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -150,7 +151,8 @@ namespace BLL.Service.Implementation
                 p => p.Include(x => x.Reviews)
             );
 
-            return places.Select(p => new PlaceDisplayDto
+            // ✅ التعديل هنا أيضاً للترتيب عند الفلترة
+            return places.OrderBy(p => p.SortOrder).Select(p => new PlaceDisplayDto
             {
                 Id = p.Id,
                 Name = p.Name,

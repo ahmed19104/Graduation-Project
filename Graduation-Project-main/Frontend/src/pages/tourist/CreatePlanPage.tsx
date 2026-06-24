@@ -9,10 +9,10 @@ import { absoluteMediaUrl } from '@/utils/media'
 import type { Place } from '@/types'
 
 const PLAN_TYPES = [
-  { value: 'Cultural', label: 'Cultural' },
-  { value: 'Adventure', label: 'Adventure' },
-  { value: 'Relaxation', label: 'Relaxation' },
-  { value: 'Family', label: 'Family' },
+  { value: 'museum', label: 'museum' },
+  { value: 'historical', label: 'historical' },
+  { value: 'pharaonic', label: 'pharaonic' },
+  { value: 'temple', label: 'temple' },
 ]
 
 interface SelectedPlace {
@@ -35,7 +35,8 @@ export function CreatePlanPage() {
     description: '',
     countDay: 3,
     budget: 5000,
-    type: 'Cultural',
+    type: 'museum',
+    governorate: 'Cairo',
   })
 
   // Manual form
@@ -204,6 +205,23 @@ export function CreatePlanPage() {
               options={PLAN_TYPES}
               required
             />
+            <Select
+  label="Governorate"
+  value={aiForm.governorate}
+  onChange={(e) =>
+    setAiForm({
+      ...aiForm,
+      governorate: e.target.value,
+    })
+  }
+  options={[
+    { value: 'Cairo', label: 'Cairo' },
+    { value: 'Giza', label: 'Giza' },
+    { value: 'Luxor', label: 'Luxor' },
+    { value: 'Aswan', label: 'Aswan' },
+  ]}
+  required
+/>
           </Card>
 
           <Button type="submit" size="lg" isLoading={isLoading} fullWidth>
