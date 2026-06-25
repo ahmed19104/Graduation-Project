@@ -24,6 +24,8 @@ namespace FinalProject
             builder.Services.AddScoped<IStoryService, BLL.Service.Implementation.StoryService>();
             builder.Services.AddScoped<IAdminService, BLL.Service.Implementation.AdminService>();
             builder.Services.AddScoped<IEmailService, BLL.Service.Implementation.EmailService>();
+            builder.Services.AddScoped<IAIRecommendation, AIRecommendation>();
+            builder.Services.AddScoped<IInteractionService, BLL.Service.Implementation.InteractionService>();
             builder.Services.AddScoped<IExternalPlaceApiService, BLL.Service.Implementation.MockExternalPlaceApiService>();
             builder.Services.AddScoped<IAppNotificationService, BLL.Service.Implementation.AppNotificationService>();
             builder.Services.AddScoped<IAiIntegrationModelChat, BLL.Service.Implementation.AiIntegrationModelChat>();

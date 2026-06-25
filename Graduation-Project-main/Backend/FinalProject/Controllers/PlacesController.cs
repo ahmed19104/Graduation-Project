@@ -11,11 +11,13 @@ namespace FinalProject.Controllers
     {
         private readonly IPlaceService _placeService;
         private readonly IFileService _fileService;
+        private readonly IInteractionService _interactionService;
 
-        public PlacesController(IPlaceService placeService, IFileService fileService)
+        public PlacesController(IPlaceService placeService, IFileService fileService, IInteractionService interactionService)
         {
             _placeService = placeService;
             _fileService = fileService;
+            _interactionService = interactionService;
         }
 
         // ---------- Public browsing ----------
@@ -28,14 +30,18 @@ namespace FinalProject.Controllers
 
         // Manual Plan flow: hits this when client passes a DB Guid in the route.
         // The {PlaceIdAI} segment is optional (defaults to 0); pass 0 for manual lookups.
+        
+        
         [HttpGet("{id:guid}/{PlaceIdAI:int}")]
         public async Task<IActionResult> GetPlaceById(Guid id, int PlaceIdAI)
         {
             try
             {
-                var data = await _placeService.GetPlaceByIdAsync(id, PlaceIdAI);
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var data = await _placeService.GetPlaceByIdAsync(id, PlaceIdAI, userId);
                 if (data == null)
                     return NotFound(new { IsSuccess = false, Message = "Place not found." });
+    
                 return Ok(new { IsSuccess = true, Data = data });
             }
             catch (KeyNotFoundException ex)
@@ -50,6 +56,8 @@ namespace FinalProject.Controllers
 
         // AI Plan flow: only IdFromModel is known. The DB Guid is not in the URL.
         // Always queries `db.Places.FirstOrDefaultAsync(p => p.IdFromModel == aiPlaceId)`.
+       
+        
         [HttpGet("ai/{idAi:int}")]
         public async Task<IActionResult> GetPlaceByIdAi(int idAi)
         {
@@ -89,6 +97,7 @@ namespace FinalProject.Controllers
             try
             {
                 await _placeService.AddUserPhotoToPlaceAsync(id, userId, dto.photoUrl);
+   
                 return StatusCode(StatusCodes.Status201Created,
                     new { IsSuccess = true, Message = "Photo added to place." });
             }
@@ -105,6 +114,7 @@ namespace FinalProject.Controllers
             try
             {
                 var data = await _placeService.AddPlaceAsync(dto);
+
                 return StatusCode(StatusCodes.Status201Created, new { IsSuccess = true, Data = data });
             }
             catch (Exception ex) { return BadRequest(new { IsSuccess = false, Message = ex.Message }); }

@@ -9,6 +9,7 @@ namespace DAL.Repo.Abstraction
 {
     public interface IUnitOfWork : IDisposable
     {
+        IGenericRepository<UserPlaceInteraction> UserPlaceInteractions { get; }
         IGenericRepository<ManualPlan> ManualPlans { get; }
         IGenericRepository<ManualPlanItem> ManualPlanItems { get; }
         IGenericRepository<Tourist> Tourists { get; }

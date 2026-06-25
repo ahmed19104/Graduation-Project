@@ -12,6 +12,22 @@ namespace DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AppNotifications",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Target = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppNotifications", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -32,6 +48,7 @@ namespace DAL.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UrlProfile = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -59,12 +76,19 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExternalApiId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdFromModel = table.Column<int>(type: "int", nullable: false),
+                    IsCustom = table.Column<bool>(type: "bit", nullable: false),
+                    ExternalApiId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SortOrder = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AffiliateLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lat = table.Column<float>(type: "real", nullable: false),
-                    Lng = table.Column<float>(type: "real", nullable: false)
+                    Lng = table.Column<float>(type: "real", nullable: false),
+                    AffiliateLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MainImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TicketPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -178,6 +202,29 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpireAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRevoked = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TourGuides",
                 columns: table => new
                 {
@@ -186,9 +233,13 @@ namespace DAL.Migrations
                     Bio = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Language = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PriceOfDay = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OutstandingBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     State = table.Column<bool>(type: "bit", nullable: false),
-                    Rate = table.Column<float>(type: "real", nullable: false)
+                    Rate = table.Column<float>(type: "real", nullable: false),
+                    DebtStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CancellationStrikes = table.Column<int>(type: "int", nullable: false),
+                    IsSuspended = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -207,7 +258,8 @@ namespace DAL.Migrations
                 {
                     TouristId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Language = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Language = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Rate = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,6 +268,61 @@ namespace DAL.Migrations
                         name: "FK_Tourists_AspNetUsers_TouristId",
                         column: x => x.TouristId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlacePhotos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlacePhotos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlacePhotos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PlacePhotos_Places_PlaceId",
+                        column: x => x.PlaceId,
+                        principalTable: "Places",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserPlaceInteractions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PlaceId = table.Column<int>(type: "int", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PlaceId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPlaceInteractions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserPlaceInteractions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserPlaceInteractions_Places_PlaceId1",
+                        column: x => x.PlaceId1,
+                        principalTable: "Places",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -253,7 +360,8 @@ namespace DAL.Migrations
                     Budget = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     TouristId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AiResponseJson = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -267,12 +375,113 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ManualPlans",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TouristId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ManualPlans", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ManualPlans_Tourists_TouristId",
+                        column: x => x.TouristId,
+                        principalTable: "Tourists",
+                        principalColumn: "TouristId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    MediaUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MediaType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TouristId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Stories_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Stories_Tourists_TouristId",
+                        column: x => x.TouristId,
+                        principalTable: "Tourists",
+                        principalColumn: "TouristId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ManualPlanItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DayNumber = table.Column<int>(type: "int", nullable: false),
+                    ManualPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ManualPlanItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ManualPlanItems_ManualPlans_ManualPlanId",
+                        column: x => x.ManualPlanId,
+                        principalTable: "ManualPlans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ManualPlanItems_Places_PlaceId",
+                        column: x => x.PlaceId,
+                        principalTable: "Places",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StoryInteractions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsViewed = table.Column<bool>(type: "bit", nullable: false),
+                    IsLoved = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoryInteractions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StoryInteractions_Stories_StoryId",
+                        column: x => x.StoryId,
+                        principalTable: "Stories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bookings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TouristId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GuideId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AiPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ManualPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ChatMessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CommissionPercentage = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CommissionAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -283,6 +492,16 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_AiPlans_AiPlanId",
+                        column: x => x.AiPlanId,
+                        principalTable: "AiPlans",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Bookings_ManualPlans_ManualPlanId",
+                        column: x => x.ManualPlanId,
+                        principalTable: "ManualPlans",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bookings_TourGuides_GuideId",
                         column: x => x.GuideId,
@@ -298,6 +517,29 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SenderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReceiverId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -305,6 +547,8 @@ namespace DAL.Migrations
                     Rate = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReviewType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TouristId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GuideId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     PlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
@@ -312,6 +556,11 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reviews_Places_PlaceId",
                         column: x => x.PlaceId,
@@ -329,31 +578,6 @@ namespace DAL.Migrations
                         principalTable: "Tourists",
                         principalColumn: "TouristId",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Stories",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TouristId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    MediaUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LoveCount = table.Column<int>(type: "int", nullable: false),
-                    ViewCount = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Stories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Stories_Tourists_TouristId",
-                        column: x => x.TouristId,
-                        principalTable: "Tourists",
-                        principalColumn: "TouristId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -401,9 +625,24 @@ namespace DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bookings_AiPlanId",
+                table: "Bookings",
+                column: "AiPlanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_ChatMessageId",
+                table: "Bookings",
+                column: "ChatMessageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_GuideId",
                 table: "Bookings",
                 column: "GuideId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_ManualPlanId",
+                table: "Bookings",
+                column: "ManualPlanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_TouristId",
@@ -411,9 +650,49 @@ namespace DAL.Migrations
                 column: "TouristId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_BookingId",
+                table: "ChatMessages",
+                column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ManualPlanItems_ManualPlanId",
+                table: "ManualPlanItems",
+                column: "ManualPlanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ManualPlanItems_PlaceId",
+                table: "ManualPlanItems",
+                column: "PlaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ManualPlans_TouristId",
+                table: "ManualPlans",
+                column: "TouristId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_GuideId",
                 table: "Payments",
                 column: "GuideId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlacePhotos_PlaceId",
+                table: "PlacePhotos",
+                column: "PlaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlacePhotos_UserId",
+                table: "PlacePhotos",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_BookingId",
+                table: "Reviews",
+                column: "BookingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_GuideId",
@@ -434,13 +713,64 @@ namespace DAL.Migrations
                 name: "IX_Stories_TouristId",
                 table: "Stories",
                 column: "TouristId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stories_UserId",
+                table: "Stories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StoryInteractions_StoryId",
+                table: "StoryInteractions",
+                column: "StoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPlaceInteractions_PlaceId1",
+                table: "UserPlaceInteractions",
+                column: "PlaceId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPlaceInteractions_UserId",
+                table: "UserPlaceInteractions",
+                column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Bookings_ChatMessages_ChatMessageId",
+                table: "Bookings",
+                column: "ChatMessageId",
+                principalTable: "ChatMessages",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_AiPlans_Tourists_TouristId",
+                table: "AiPlans");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bookings_Tourists_TouristId",
+                table: "Bookings");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_ManualPlans_Tourists_TouristId",
+                table: "ManualPlans");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_TourGuides_AspNetUsers_GuideId",
+                table: "TourGuides");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bookings_AiPlans_AiPlanId",
+                table: "Bookings");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Bookings_ChatMessages_ChatMessageId",
+                table: "Bookings");
+
             migrationBuilder.DropTable(
-                name: "AiPlans");
+                name: "AppNotifications");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -458,31 +788,55 @@ namespace DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "ManualPlanItems");
 
             migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
+                name: "PlacePhotos");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "Stories");
+                name: "StoryInteractions");
+
+            migrationBuilder.DropTable(
+                name: "UserPlaceInteractions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Places");
+                name: "Stories");
 
             migrationBuilder.DropTable(
-                name: "TourGuides");
+                name: "Places");
 
             migrationBuilder.DropTable(
                 name: "Tourists");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "AiPlans");
+
+            migrationBuilder.DropTable(
+                name: "ChatMessages");
+
+            migrationBuilder.DropTable(
+                name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "ManualPlans");
+
+            migrationBuilder.DropTable(
+                name: "TourGuides");
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260513121859_Balanc")]
-    partial class Balanc
+    [Migration("20260625163742_All")]
+    partial class All
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,6 +66,36 @@ namespace DAL.Migrations
                     b.HasIndex("TouristId");
 
                     b.ToTable("AiPlans");
+                });
+
+            modelBuilder.Entity("DAL.Entity.AppNotification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("Target")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppNotifications");
                 });
 
             modelBuilder.Entity("DAL.Entity.AppUser", b =>
@@ -217,7 +247,15 @@ namespace DAL.Migrations
                     b.Property<Guid>("BookingId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Message")
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -230,7 +268,9 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChatMessage");
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("DAL.Entity.ManualPlan", b =>
@@ -325,9 +365,20 @@ namespace DAL.Migrations
                     b.Property<string>("AffiliateLink")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ExternalApiId")
-                        .IsRequired()
+                    b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExternalApiId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdFromModel")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCustom")
+                        .HasColumnType("bit");
 
                     b.Property<float>("Lat")
                         .HasColumnType("real");
@@ -335,10 +386,19 @@ namespace DAL.Migrations
                     b.Property<float>("Lng")
                         .HasColumnType("real");
 
+                    b.Property<string>("MainImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TicketPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -350,10 +410,74 @@ namespace DAL.Migrations
                     b.ToTable("Places");
                 });
 
+            modelBuilder.Entity("DAL.Entity.PlacePhoto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PlaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PlacePhotos");
+                });
+
+            modelBuilder.Entity("DAL.Entity.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("DAL.Entity.Review", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BookingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comment")
@@ -373,11 +497,17 @@ namespace DAL.Migrations
                     b.Property<int>("Rate")
                         .HasColumnType("int");
 
+                    b.Property<string>("ReviewType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("TouristId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
 
                     b.HasIndex("GuideId");
 
@@ -410,25 +540,54 @@ namespace DAL.Migrations
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LoveCount")
-                        .HasColumnType("int");
+                    b.Property<string>("MediaType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MediaUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TouristId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ViewCount")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TouristId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Stories");
+                });
+
+            modelBuilder.Entity("DAL.Entity.StoryInteraction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsLoved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsViewed")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoryId");
+
+                    b.ToTable("StoryInteractions");
                 });
 
             modelBuilder.Entity("DAL.Entity.TourGuide", b =>
@@ -443,6 +602,9 @@ namespace DAL.Migrations
 
                     b.Property<int>("CancellationStrikes")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("DebtStartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsSuspended")
                         .HasColumnType("bit");
@@ -491,9 +653,44 @@ namespace DAL.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<float>("Rate")
+                        .HasColumnType("real");
+
                     b.HasKey("TouristId");
 
                     b.ToTable("Tourists");
+                });
+
+            modelBuilder.Entity("DAL.Entity.UserPlaceInteraction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PlaceId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId1");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserPlaceInteractions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -677,6 +874,17 @@ namespace DAL.Migrations
                     b.Navigation("Tourist");
                 });
 
+            modelBuilder.Entity("DAL.Entity.ChatMessage", b =>
+                {
+                    b.HasOne("DAL.Entity.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
             modelBuilder.Entity("DAL.Entity.ManualPlan", b =>
                 {
                     b.HasOne("DAL.Entity.Tourist", "Tourist")
@@ -718,8 +926,42 @@ namespace DAL.Migrations
                     b.Navigation("Guide");
                 });
 
+            modelBuilder.Entity("DAL.Entity.PlacePhoto", b =>
+                {
+                    b.HasOne("DAL.Entity.Place", "Place")
+                        .WithMany("UserPhotos")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Entity.RefreshToken", b =>
+                {
+                    b.HasOne("DAL.Entity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DAL.Entity.Review", b =>
                 {
+                    b.HasOne("DAL.Entity.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId");
+
                     b.HasOne("DAL.Entity.TourGuide", "Guide")
                         .WithMany("Reviews")
                         .HasForeignKey("GuideId")
@@ -735,6 +977,8 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Booking");
+
                     b.Navigation("Guide");
 
                     b.Navigation("Place");
@@ -744,13 +988,28 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entity.Story", b =>
                 {
-                    b.HasOne("DAL.Entity.Tourist", "Tourist")
+                    b.HasOne("DAL.Entity.Tourist", null)
                         .WithMany("Stories")
-                        .HasForeignKey("TouristId")
+                        .HasForeignKey("TouristId");
+
+                    b.HasOne("DAL.Entity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Tourist");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Entity.StoryInteraction", b =>
+                {
+                    b.HasOne("DAL.Entity.Story", "Story")
+                        .WithMany("Interactions")
+                        .HasForeignKey("StoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Story");
                 });
 
             modelBuilder.Entity("DAL.Entity.TourGuide", b =>
@@ -771,6 +1030,25 @@ namespace DAL.Migrations
                         .HasForeignKey("DAL.Entity.Tourist", "TouristId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Entity.UserPlaceInteraction", b =>
+                {
+                    b.HasOne("DAL.Entity.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
 
                     b.Navigation("User");
                 });
@@ -852,6 +1130,13 @@ namespace DAL.Migrations
                     b.Navigation("ManualPlan");
 
                     b.Navigation("Reviews");
+
+                    b.Navigation("UserPhotos");
+                });
+
+            modelBuilder.Entity("DAL.Entity.Story", b =>
+                {
+                    b.Navigation("Interactions");
                 });
 
             modelBuilder.Entity("DAL.Entity.TourGuide", b =>

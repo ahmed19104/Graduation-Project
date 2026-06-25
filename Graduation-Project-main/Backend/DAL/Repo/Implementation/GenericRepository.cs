@@ -12,6 +12,10 @@ namespace DAL.Repo.Implementation
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
         protected readonly AppDbContext _context;
         internal DbSet<T> _dbSet;
 

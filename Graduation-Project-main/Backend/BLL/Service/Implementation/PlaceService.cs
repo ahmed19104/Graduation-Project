@@ -1,4 +1,5 @@
 ﻿using BLL.ModelVm.Places;
+using BLL.Service.Abstraction;
 using DAL.Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,15 @@ namespace BLL.Service.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IExternalPlaceApiService _externalApi;
         private readonly IFileService _fileService;
+        private readonly IInteractionService _interactionService;
 
-        public PlaceService(IUnitOfWork unitOfWork, IExternalPlaceApiService externalApi, IFileService fileService)
+        public PlaceService(IUnitOfWork unitOfWork, IExternalPlaceApiService externalApi, IFileService fileService, IInteractionService interactionService)
         {
             _unitOfWork = unitOfWork;
             _externalApi = externalApi;
             _fileService = fileService;
+            _interactionService = interactionService;
+
         }
 
         // ================== Public listing ==================
@@ -50,7 +54,10 @@ namespace BLL.Service.Implementation
         /// - If <paramref name="id"/> is non-empty, the DB primary key is used.
         /// - Otherwise, <paramref name="externalId"/> (IdFromModel) is used.
         /// </summary>
-        public async Task<PlaceDetailsDto> GetPlaceByIdAsync(Guid id, int? externalId)
+        public async Task<PlaceDetailsDto> GetPlaceByIdAsync(
+     Guid id,
+     int? externalId,
+     string userId)
         {
             var hasGuid = id != Guid.Empty;
             var hasAiId = externalId.HasValue && externalId.Value > 0;
@@ -68,8 +75,28 @@ namespace BLL.Service.Implementation
             );
 
             var place = placesQuery.FirstOrDefault();
+
             if (place == null)
                 throw new KeyNotFoundException("Place not found.");
+
+            // سجل التفاعل
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await _unitOfWork.UserPlaceInteractions.AddAsync(
+                    new UserPlaceInteraction
+                    (
+                         userId,
+                        place.IdFromModel,
+                         "view"
+                        
+                    ));
+
+                await _unitOfWork.CompleteAsync();
+                await _interactionService.AddInteractionAsync(
+userId,
+place.IdFromModel,
+"view");
+            }
 
             return await MapToDetailsAsync(place);
         }
@@ -249,8 +276,13 @@ namespace BLL.Service.Implementation
         {
             string? localImageUrl = await _fileService.UploadFileAsync(photoUrl, "placesTourist");
             var photo = new PlacePhoto(placeId, userId, localImageUrl);
+            var place = await _unitOfWork.Places.GetByIdAsync(placeId);
             await _unitOfWork.PlacePhotos.AddAsync(photo);
             await _unitOfWork.CompleteAsync();
+            await _interactionService.AddInteractionAsync(
+                userId,
+                place.IdFromModel,
+                "favorite");
             return true;
         }
 

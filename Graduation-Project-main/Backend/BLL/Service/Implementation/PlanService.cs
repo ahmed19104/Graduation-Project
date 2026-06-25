@@ -28,7 +28,31 @@ namespace BLL.Service.Implementation
             plan.SetAiResponse(aiResult);
 
             await _unitOfWork.AiPlans.AddAsync(plan);
-            await _unitOfWork.CompleteAsync();
+
+            var places = JsonSerializer.Deserialize<List<AiPlacePlanDto>>(aiResult);
+
+            foreach (var place in places)
+            {
+                var dbPlace = (await _unitOfWork.Places.FindAsync(
+                    p => p.IdFromModel == place.PlaceId))
+                    .FirstOrDefault();
+
+                if (dbPlace != null)
+                {
+                    await _unitOfWork.UserPlaceInteractions.AddAsync(
+                        new UserPlaceInteraction
+                        (
+                             userId,
+                           dbPlace.IdFromModel, // Guid من قاعدة البيانات
+                             "trip"
+                           
+                        ));
+                }
+            }
+
+
+                await _unitOfWork.CompleteAsync();
+           
 
             return plan.Id;
         }
@@ -43,8 +67,20 @@ namespace BLL.Service.Implementation
 
             foreach (var item in dto.SelectedPlaces)
             {
+                var placeExists = await _unitOfWork.Places.GetByIdAsync(item.PlaceId);
+                if (placeExists == null)
+                    throw new KeyNotFoundException($"Place with ID {item.PlaceId} not found.");
+
                 var planItem = new ManualPlanItem(plan.Id, item.PlaceId, item.DayNumber);
                 await _unitOfWork.ManualPlanItems.AddAsync(planItem);
+                await _unitOfWork.UserPlaceInteractions.AddAsync(
+        new UserPlaceInteraction
+        (
+            touristId,
+             placeExists.IdFromModel,
+             "trip"
+             
+        ));
             }
 
             await _unitOfWork.CompleteAsync();

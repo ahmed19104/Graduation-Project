@@ -27,6 +27,7 @@ namespace DAL.DataApp
         public DbSet<Story> Stories { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<AiPlan> AiPlans { get; set; }
+        public DbSet<UserPlaceInteraction> UserPlaceInteractions { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Place> Places { get; set; }

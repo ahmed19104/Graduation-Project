@@ -18,6 +18,7 @@ namespace DAL.Repo.Implementation
 
         // جوه الكلاس
         public IGenericRepository<ManualPlan> ManualPlans { get; private set; }
+        public IGenericRepository<UserPlaceInteraction> UserPlaceInteractions { get; private set; }
         public IGenericRepository<ManualPlanItem> ManualPlanItems { get; private set; }
         public IGenericRepository<Review> Reviews { get; private set; }
 
@@ -60,6 +61,7 @@ namespace DAL.Repo.Implementation
             PlacePhotos = new GenericRepository<PlacePhoto>(_context);
             ManualPlan = new GenericRepository<ManualPlan>(_context);
             AppNotifications = new GenericRepository<AppNotification>(_context);
+            UserPlaceInteractions = new GenericRepository<UserPlaceInteraction>(_context);
         }
 
 

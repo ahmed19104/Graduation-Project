@@ -13,7 +13,7 @@ namespace BLL.Service.Abstraction
     {
       
         Task<IEnumerable<PlaceDisplayDto>> GetAllPlacesAsync();
-        Task<PlaceDetailsDto> GetPlaceByIdAsync(Guid id, int? externalId);
+        Task<PlaceDetailsDto> GetPlaceByIdAsync(Guid id, int? externalId, string userId);
         Task<IEnumerable<PlaceDisplayDto>> GetPlacesByTypeAsync(string type);
 
         Task<PlaceDisplayDto> AddPlaceAsync(CreatePlaceDto dto);

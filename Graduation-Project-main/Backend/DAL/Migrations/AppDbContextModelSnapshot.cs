@@ -658,6 +658,38 @@ namespace DAL.Migrations
                     b.ToTable("Tourists");
                 });
 
+            modelBuilder.Entity("DAL.Entity.UserPlaceInteraction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PlaceId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlaceId1");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserPlaceInteractions");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -995,6 +1027,25 @@ namespace DAL.Migrations
                         .HasForeignKey("DAL.Entity.Tourist", "TouristId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Entity.UserPlaceInteraction", b =>
+                {
+                    b.HasOne("DAL.Entity.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
 
                     b.Navigation("User");
                 });

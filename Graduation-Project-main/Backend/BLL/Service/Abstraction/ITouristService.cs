@@ -13,5 +13,6 @@ namespace BLL.Service.Abstraction
         Task<TouristProfileDto> GetMyProfileAsync(string touristId);
         Task<bool> UpdateProfileAsync(string touristId, UpdateTouristProfileDto dto);
         Task<string> UpdateProfileImageAsync(string touristId, IFormFile profileImage);
+       
     }
 }

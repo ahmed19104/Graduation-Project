@@ -1,5 +1,6 @@
 using BLL.ModelVm.TouristVm;
 using FinalProject.Common;
+using MailKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,15 @@ namespace FinalProject.Controllers
     {
         private readonly ITouristService _touristService;
         private readonly IPlanService _planService;
+        private readonly IInteractionService _interactionService;
+        private readonly IAIRecommendation _aiService;
 
-        public TouristsController(ITouristService touristService, IPlanService planService)
+        public TouristsController(ITouristService touristService, IPlanService planService, IInteractionService interactionService, IAIRecommendation aiService)
         {
             _touristService = touristService;
             _planService = planService;
+            _interactionService = interactionService;
+            _aiService = aiService;
         }
 
         [HttpGet("my-profile")]
@@ -89,6 +94,19 @@ namespace FinalProject.Controllers
                 return Unauthorized(new { IsSuccess = false, Message = "Unauthenticated." });
             var plans = await _planService.GetMyManualPlansAsync(touristId);
             return Ok(new { IsSuccess = true, Data = plans });
+        }
+
+        [HttpGet("recommendations")]
+        public async Task<IActionResult> GetRecommendations()
+        {
+            if (!User.TryGetUserId(out var touristId))
+                return Unauthorized(new { IsSuccess = false, Message = "Unauthenticated." });
+
+            var interactions = await _interactionService.GetUserInteractions(touristId);
+
+            var result = await _aiService.GetRecommendationsFromAiAsync(interactions);
+
+            return Ok(result);
         }
     }
 }

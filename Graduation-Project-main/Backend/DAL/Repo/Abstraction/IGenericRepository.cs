@@ -10,6 +10,7 @@ namespace DAL.Repo.Abstraction
 {
     public interface IGenericRepository<T> where T : class
     {
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
         Task<IEnumerable<T>> FindAsyncInclude(
     Expression<Func<T, bool>> predicate,
     Func<IQueryable<T>, IQueryable<T>> include);

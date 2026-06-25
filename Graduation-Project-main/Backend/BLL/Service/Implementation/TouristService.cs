@@ -1,5 +1,6 @@
 using BLL.ModelVm.TouristVm;
 using BLL.Service.Abstraction;
+using DAL.Entity;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
@@ -92,5 +93,7 @@ namespace BLL.Service.Implementation
 
             return newImageUrl;
         }
+
+     
     }
 }

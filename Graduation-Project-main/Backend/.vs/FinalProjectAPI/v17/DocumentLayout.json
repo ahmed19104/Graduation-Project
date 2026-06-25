@@ -3,36 +3,76 @@
   "WorkspaceRootPath": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\implementation\\aiintgrationmodelchat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\implementation\\aiintgrationmodelchat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\finalproject\\controllers\\aichatmodelcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\controllers\\aichatmodelcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\abstraction\\iaiintgrationmodelchat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\abstraction\\iaiintgrationmodelchat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\finalproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\implementation\\airecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\implementation\\airecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\finalproject\\controllers\\touristscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\controllers\\touristscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\dal\\migrations\\20260625163742_all.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|solutionrelative:dal\\migrations\\20260625163742_all.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\finalproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\dal\\entity\\place.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|solutionrelative:dal\\entity\\place.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260625162751_AddUserPlaceInteractionsInt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DAL\\Migrations\\20260625162751_AddUserPlaceInteractionsInt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\implementation\\interactionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\implementation\\interactionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\dal\\repo\\implementation\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|solutionrelative:dal\\repo\\implementation\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\dal\\repo\\abstraction\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|solutionrelative:dal\\repo\\abstraction\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\abstraction\\iinteractionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\abstraction\\iinteractionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\abstraction\\iairecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\abstraction\\iairecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\implementation\\planservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\implementation\\planservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\modelvm\\aiplane\\aiplaceplandto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\modelvm\\aiplane\\aiplaceplandto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\implementation\\placeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\implementation\\placeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260623234227_Sort.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DAL\\Migrations\\20260623234227_Sort.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\finalproject\\controllers\\placescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4D765B0-B2E6-4AA4-9445-E60E2C4088AA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\controllers\\placescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\dal\\entity\\userplaceinteraction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D86F6F11-7391-4DC4-A8FC-C20A0DB98160}|DAL\\DAL.csproj|solutionrelative:dal\\entity\\userplaceinteraction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\service\\abstraction\\iplaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\service\\abstraction\\iplaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|e:\\graduation-project-main (1)\\graduation-project-main\\backend\\bll\\modelvm\\touristvm\\recommendationrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CED7C944-31B6-48E2-9C1D-DBC8A79FFFAF}|BLL\\BLL.csproj|solutionrelative:bll\\modelvm\\touristvm\\recommendationrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,99 +82,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Program.cs",
-              "RelativeDocumentMoniker": "FinalProject\\Program.cs",
-              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Program.cs",
-              "RelativeToolTip": "FinalProject\\Program.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAAABwAAABxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-24T20:05:59.784Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AiChatModelController.cs",
-              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Controllers\\AiChatModelController.cs",
-              "RelativeDocumentMoniker": "FinalProject\\Controllers\\AiChatModelController.cs",
-              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Controllers\\AiChatModelController.cs",
-              "RelativeToolTip": "FinalProject\\Controllers\\AiChatModelController.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAABFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-24T19:36:50.809Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IAiIntgrationModelChat.cs",
-              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IAiIntgrationModelChat.cs",
-              "RelativeDocumentMoniker": "BLL\\Service\\Abstraction\\IAiIntgrationModelChat.cs",
-              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IAiIntgrationModelChat.cs",
-              "RelativeToolTip": "BLL\\Service\\Abstraction\\IAiIntgrationModelChat.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-24T19:28:22.727Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AiIntgrationModelChat.cs",
-              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\AiIntgrationModelChat.cs",
-              "RelativeDocumentMoniker": "BLL\\Service\\Implementation\\AiIntgrationModelChat.cs",
-              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\AiIntgrationModelChat.cs",
-              "RelativeToolTip": "BLL\\Service\\Implementation\\AiIntgrationModelChat.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAAABoAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-24T19:25:55.148Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "20260623234227_Sort.cs",
-              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260623234227_Sort.cs",
-              "RelativeDocumentMoniker": "DAL\\Migrations\\20260623234227_Sort.cs",
-              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260623234227_Sort.cs",
-              "RelativeToolTip": "DAL\\Migrations\\20260623234227_Sort.cs",
+              "Title": "20260625163742_All.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260625163742_All.cs",
+              "RelativeDocumentMoniker": "DAL\\Migrations\\20260625163742_All.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260625163742_All.cs",
+              "RelativeToolTip": "DAL\\Migrations\\20260625163742_All.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-23T23:42:28.404Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "PlaceService.cs",
-              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\PlaceService.cs",
-              "RelativeDocumentMoniker": "BLL\\Service\\Implementation\\PlaceService.cs",
-              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\PlaceService.cs",
-              "RelativeToolTip": "BLL\\Service\\Implementation\\PlaceService.cs",
-              "ViewState": "AgIAAPkAAAAAAAAAAAAAAAkBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-23T23:38:01.522Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Place.cs",
-              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Entity\\Place.cs",
-              "RelativeDocumentMoniker": "DAL\\Entity\\Place.cs",
-              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Entity\\Place.cs",
-              "RelativeToolTip": "DAL\\Entity\\Place.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-23T21:56:56.779Z"
+              "WhenOpened": "2026-06-25T16:37:43.423Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -146,7 +107,220 @@
               "RelativeToolTip": "FinalProject\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAABgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-06-23T20:21:17.575Z"
+              "WhenOpened": "2026-06-25T16:37:08.609Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "20260625162751_AddUserPlaceInteractionsInt.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260625162751_AddUserPlaceInteractionsInt.cs",
+              "RelativeDocumentMoniker": "DAL\\Migrations\\20260625162751_AddUserPlaceInteractionsInt.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Migrations\\20260625162751_AddUserPlaceInteractionsInt.cs",
+              "RelativeToolTip": "DAL\\Migrations\\20260625162751_AddUserPlaceInteractionsInt.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:27:51.401Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Program.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Program.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Program.cs",
+              "RelativeToolTip": "FinalProject\\Program.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAABoAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:27:14.662Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GenericRepository.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Repo\\Implementation\\GenericRepository.cs",
+              "RelativeDocumentMoniker": "DAL\\Repo\\Implementation\\GenericRepository.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Repo\\Implementation\\GenericRepository.cs",
+              "RelativeToolTip": "DAL\\Repo\\Implementation\\GenericRepository.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAYwBEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:22:29.574Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IGenericRepository.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Repo\\Abstraction\\IGenericRepository.cs",
+              "RelativeDocumentMoniker": "DAL\\Repo\\Abstraction\\IGenericRepository.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Repo\\Abstraction\\IGenericRepository.cs",
+              "RelativeToolTip": "DAL\\Repo\\Abstraction\\IGenericRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:22:15.328Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TouristsController.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Controllers\\TouristsController.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Controllers\\TouristsController.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Controllers\\TouristsController.cs",
+              "RelativeToolTip": "FinalProject\\Controllers\\TouristsController.cs",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAAAGoAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:16:44.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AIRecommendation.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\AIRecommendation.cs",
+              "RelativeDocumentMoniker": "BLL\\Service\\Implementation\\AIRecommendation.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\AIRecommendation.cs",
+              "RelativeToolTip": "BLL\\Service\\Implementation\\AIRecommendation.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAACQAAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:13:43.367Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IAIRecommendation.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IAIRecommendation.cs",
+              "RelativeDocumentMoniker": "BLL\\Service\\Abstraction\\IAIRecommendation.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IAIRecommendation.cs",
+              "RelativeToolTip": "BLL\\Service\\Abstraction\\IAIRecommendation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:13:05.591Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AiPlacePlanDto.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\ModelVm\\AiPlane\\AiPlacePlanDto.cs",
+              "RelativeDocumentMoniker": "BLL\\ModelVm\\AiPlane\\AiPlacePlanDto.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\ModelVm\\AiPlane\\AiPlacePlanDto.cs",
+              "RelativeToolTip": "BLL\\ModelVm\\AiPlane\\AiPlacePlanDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T16:06:00.167Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PlanService.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\PlanService.cs",
+              "RelativeDocumentMoniker": "BLL\\Service\\Implementation\\PlanService.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\PlanService.cs",
+              "RelativeToolTip": "BLL\\Service\\Implementation\\PlanService.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAAC0AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:48:40.777Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IInteractionService.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IInteractionService.cs",
+              "RelativeDocumentMoniker": "BLL\\Service\\Abstraction\\IInteractionService.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IInteractionService.cs",
+              "RelativeToolTip": "BLL\\Service\\Abstraction\\IInteractionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:40:54.392Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "InteractionService.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\InteractionService.cs",
+              "RelativeDocumentMoniker": "BLL\\Service\\Implementation\\InteractionService.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\InteractionService.cs",
+              "RelativeToolTip": "BLL\\Service\\Implementation\\InteractionService.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAADwvyIAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:39:31.928Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "IPlaceService.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IPlaceService.cs",
+              "RelativeDocumentMoniker": "BLL\\Service\\Abstraction\\IPlaceService.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Abstraction\\IPlaceService.cs",
+              "RelativeToolTip": "BLL\\Service\\Abstraction\\IPlaceService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:37:08.375Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "UserPlaceInteraction.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Entity\\UserPlaceInteraction.cs",
+              "RelativeDocumentMoniker": "DAL\\Entity\\UserPlaceInteraction.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\DAL\\Entity\\UserPlaceInteraction.cs",
+              "RelativeToolTip": "DAL\\Entity\\UserPlaceInteraction.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAAB4AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:33:24.359Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PlaceService.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\PlaceService.cs",
+              "RelativeDocumentMoniker": "BLL\\Service\\Implementation\\PlaceService.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\Service\\Implementation\\PlaceService.cs",
+              "RelativeToolTip": "BLL\\Service\\Implementation\\PlaceService.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAACABAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:29:44.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "PlacesController.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Controllers\\PlacesController.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Controllers\\PlacesController.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\FinalProject\\Controllers\\PlacesController.cs",
+              "RelativeToolTip": "FinalProject\\Controllers\\PlacesController.cs",
+              "ViewState": "AgIAAFsAAAAAAAAAAAAAAGIAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:29:39.163Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "RecommendationRequestDto.cs",
+              "DocumentMoniker": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\ModelVm\\TouristVm\\RecommendationRequestDto.cs",
+              "RelativeDocumentMoniker": "BLL\\ModelVm\\TouristVm\\RecommendationRequestDto.cs",
+              "ToolTip": "E:\\Graduation-Project-main (1)\\Graduation-Project-main\\Backend\\BLL\\ModelVm\\TouristVm\\RecommendationRequestDto.cs",
+              "RelativeToolTip": "BLL\\ModelVm\\TouristVm\\RecommendationRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T15:04:32.695Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
             }
           ]
         },
