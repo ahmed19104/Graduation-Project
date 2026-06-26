@@ -91,7 +91,7 @@ namespace BLL.Service.Implementation
                         
                     ));
 
-                await _unitOfWork.CompleteAsync();
+                
                 await _interactionService.AddInteractionAsync(
 userId,
 place.IdFromModel,
