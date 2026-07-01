@@ -1,0 +1,12 @@
+{
+  "name": "ather-convert",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "docx": "^8.5.0",
+    "marked": "^12.0.0",
+    "playwright": "^1.61.1",
+    "pptxgenjs": "^3.12.0",
+    "puppeteer": "^22.0.0"
+  }
+}

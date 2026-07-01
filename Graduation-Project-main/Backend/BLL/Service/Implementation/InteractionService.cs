@@ -15,19 +15,27 @@ namespace BLL.Service.Implementation
             _unitOfWork = unitOfWork;
         }
         public async Task AddInteractionAsync(
- string userId,
- int placeId,
- string action)
+        string userId,
+        int placeId,
+        string action)
         {
-            var interaction = new UserPlaceInteraction(
-                userId,
-                placeId,
-                action);
+            try
+            {
+                var interaction = new UserPlaceInteraction(
+                    userId,
+                    placeId,
+                    action);
 
-            await _unitOfWork.UserPlaceInteractions
-                .AddAsync(interaction);
+                await _unitOfWork.UserPlaceInteractions.AddAsync(interaction);
 
-            await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CompleteAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    ex.InnerException?.Message ?? ex.Message,
+                    ex);
+            }
         }
         public async Task<List<UserPlaceInteraction>> GetUserInteractions(string userId)
         {

@@ -82,20 +82,20 @@ namespace BLL.Service.Implementation
             // سجل التفاعل
             if (!string.IsNullOrEmpty(userId))
             {
-                await _unitOfWork.UserPlaceInteractions.AddAsync(
-                    new UserPlaceInteraction
-                    (
-                         userId,
-                        place.IdFromModel,
-                         "view"
-                        
-                    ));
+//                await _unitOfWork.UserPlaceInteractions.AddAsync(
+//                    new UserPlaceInteraction
+//                    (
+//                         userId,
+//                        place.IdFromModel,
+//                         "view"
 
-                
-                await _interactionService.AddInteractionAsync(
-userId,
-place.IdFromModel,
-"view");
+//                    ));
+
+
+//                await _interactionService.AddInteractionAsync(
+//userId,
+//place.IdFromModel,
+//"view");
             }
 
             return await MapToDetailsAsync(place);

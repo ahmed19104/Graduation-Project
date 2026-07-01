@@ -39,14 +39,14 @@ namespace BLL.Service.Implementation
 
                 if (dbPlace != null)
                 {
-                    await _unitOfWork.UserPlaceInteractions.AddAsync(
-                        new UserPlaceInteraction
-                        (
-                             userId,
-                           dbPlace.IdFromModel, // Guid من قاعدة البيانات
-                             "trip"
+                    //await _unitOfWork.UserPlaceInteractions.AddAsync(
+                    //    new UserPlaceInteraction
+                    //    (
+                    //         userId,
+                    //       dbPlace.IdFromModel, // Guid من قاعدة البيانات
+                    //         "trip"
                            
-                        ));
+                    //    ));
                 }
             }
 
@@ -73,14 +73,14 @@ namespace BLL.Service.Implementation
 
                 var planItem = new ManualPlanItem(plan.Id, item.PlaceId, item.DayNumber);
                 await _unitOfWork.ManualPlanItems.AddAsync(planItem);
-                await _unitOfWork.UserPlaceInteractions.AddAsync(
-        new UserPlaceInteraction
-        (
-            touristId,
-             placeExists.IdFromModel,
-             "trip"
+        //        await _unitOfWork.UserPlaceInteractions.AddAsync(
+        //new UserPlaceInteraction
+        //(
+        //    touristId,
+        //     placeExists.IdFromModel,
+        //     "trip"
              
-        ));
+        //));
             }
 
             await _unitOfWork.CompleteAsync();

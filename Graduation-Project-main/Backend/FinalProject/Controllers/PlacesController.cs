@@ -32,8 +32,8 @@ namespace FinalProject.Controllers
         // The {PlaceIdAI} segment is optional (defaults to 0); pass 0 for manual lookups.
         
         
-        [HttpGet("{id:guid}/{PlaceIdAI:int}")]
-        public async Task<IActionResult> GetPlaceById(Guid id, int PlaceIdAI)
+        [HttpGet("{id:guid}/{PlaceIdAI:int?}")]
+        public async Task<IActionResult> GetPlaceById(Guid id, int? PlaceIdAI)
         {
             try
             {
@@ -50,7 +50,13 @@ namespace FinalProject.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { IsSuccess = false, Message = ex.Message });
+                return BadRequest(new
+                {
+                    IsSuccess = false,
+                    Message = ex.Message,
+                    InnerException = ex.InnerException?.Message,
+                    StackTrace = ex.StackTrace
+                });
             }
         }
 
